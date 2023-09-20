@@ -4,15 +4,13 @@ import app from '../src/index';
 
 describe('App routes', () => {
   it('should get all users', async () => {
-    const response = await request(app).post('/api/webapp/login'); 
+    const response = await request(app).post('/api/webapp/login').send({userName: 'test', password: 'test1234'}); 
 
     expect(response.status).toBe(200);
-    expect(response.body).toBe({
-        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNjk1MTk2MjIzfQ.sfNjATxo5BfTSyuBsY5ac60XjpHq5GI7gSpEHg_vL80'
-    });
-
+    expect(response.body.token).toBeDefined()
+    const expectedJwtPayload = atob(response.body.token.split(".")[1]);
+    expect(JSON.parse(expectedJwtPayload).sub).toBe("test")
   });
 });
 
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNjk1MTk2MjIzfQ.sfNjATxo5BfTSyuBsY5ac60XjpHq5GI7gSpEHg_vL80

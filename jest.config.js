@@ -5,6 +5,5 @@ module.exports = {
     moduleFileExtensions: ['ts', 'js', 'json', 'node'],
     collectCoverage: true,
     resetMocks: true,
-    silent: true,
   };
   

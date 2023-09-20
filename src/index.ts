@@ -1,26 +1,37 @@
 import express from 'express';
+import "reflect-metadata";
+import { AppDataSource } from "./data-source";
+import User from "./entity/User";
+
 require('dotenv').config(); // Load environment variables from .env file
 
 const secretKey = process.env.SECRET_KEY;
 
-
-
 const app = express();
-
+app.use(express.urlencoded({extended: true}));
  
 app.use(express.json());
+
+
+// (async () => {
+//   await AppDataSource.initialize();
+//   console.log('Created DB connection');
+// })();
+
 
 var { expressjwt: jwt } = require("express-jwt");
 var jwt = require('jsonwebtoken');
 
 app.post('/api/webapp/login',(req,res)=>
 {
-    const { user_name,password } = req.body
-    const token = jwt.sign({ user_name }, secretKey);
+    const { userName,password } = req.body
+    console.debug(userName, password)
+    const token = jwt.sign({ sub: userName }, secretKey);
     res.json({
       token:token
     });
     
+
 });
 
 const port = process.env.PORT || 8080

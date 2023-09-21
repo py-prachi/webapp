@@ -1,7 +1,7 @@
 import express from 'express';
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
-import User from "./entity/User";
+//import User from "./entity/User";
 
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -13,10 +13,16 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 
-// (async () => {
-//   await AppDataSource.initialize();
-//   console.log('Created DB connection');
-// })();
+(async () => {
+  try{
+    await AppDataSource.initialize();
+    console.log('Created DB connection');
+  } catch (error) {
+    console.error(error);
+    throw new Error("Unable to connect to DB")
+  }
+  
+})();
 
 
 var { expressjwt: jwt } = require("express-jwt");

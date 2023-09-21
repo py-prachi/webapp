@@ -1,12 +1,12 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-//import { User } from "./entity/User"
+import { User } from "./entity/User"
 
 
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
-import { User } from "./entity/User";
 
-console.log(`in the data Source ${__dirname}/entity`);
+
+
 const AppDataSource = new DataSource({
     type: "postgres",
     host: "localhost",
@@ -14,10 +14,10 @@ const AppDataSource = new DataSource({
     username: "ashishjagtap",
     password: undefined,
     database: "webapp",
-    synchronize: true,
+    synchronize: false,
     logging: false,
     entities: [User],
-    //migrations: [],
+    //migrations: [__dirname + '/migrations/*.ts'],
     subscribers: [],
 });
 

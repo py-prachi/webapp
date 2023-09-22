@@ -1,11 +1,7 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
-
-
-import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
-
-
+//import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
 const AppDataSource = new DataSource({
     type: "postgres",

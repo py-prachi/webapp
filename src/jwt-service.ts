@@ -10,9 +10,7 @@ class JwtService {
 
   
   generateToken(sub: string): string {
-    console.log("in jwt service");
-    console.log(sub, this.secretKey);
-    //console.log(jwt.sign({ sub }, this.secretKey));
+    const token = jwt.sign({ sub }, this.secretKey);
     return jwt.sign({ sub }, this.secretKey);
   }
 }

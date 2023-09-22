@@ -7,11 +7,11 @@
     "test": "jest --verbose",
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
     "start": "ts-node src/index.ts",
-    "typeorm": "npx typeorm-ts-node-commonjs -d database/ormconfig.ts",
-    "migration:run": "npx typeorm-ts-node-commonjs migration:run",
-    "migration:revert": "npx typeorm-ts-node-commonjs migration:revert",
-    "migration:generate": "npx typeorm-ts-node-commonjs migration:generate",
-    "migration:show": "npx typeorm-ts-node-commonjs migration:show"
+    "typeorm": "typeorm-ts-node-commonjs -d database/ormconfig.ts",
+    "migration:run": "npm run typeorm migration:run",
+    "migration:revert": "npm run typeorm migration:revert",
+    "migration:generate": "npm run typeorm migration:generate",
+    "migration:show": "npm run typeorm migration:show"
   },
   "keywords": [],
   "author": "",
@@ -39,6 +39,3 @@
     "typescript": "^5.2.2"
   }
 }
-
-
-

@@ -1,28 +1,26 @@
-
 // ormconfig.ts
 
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import { DataSource } from "typeorm";
 import { User } from "../src/entity/User";
-import path from 'path';
+import path from "path";
 
 const dbConfig: PostgresConnectionOptions = {
   type: "postgres",
   host: "localhost",
   port: 5432,
-  username: "ashishjagtap",
-  password: undefined,
+  username: "test",
+  password: "password",
   database: "webapp",
   synchronize: false,
   logging: false,
   entities: [User],
-  migrations: [path.join(__dirname, './migrations/*.ts')],
-  subscribers: []
-  
+  migrations: [path.join(__dirname, "./migrations/*.ts")],
+  subscribers: [],
 };
 
 const cliConfig = {
-  migrationsDir: 'database/migrations', // Relative to tsconfig.json
+  migrationsDir: "database/migrations", // Relative to tsconfig.json
 };
 
 // export = {
@@ -30,22 +28,13 @@ const cliConfig = {
 //   cli: cliConfig,
 // };
 
-export default new  DataSource(dbConfig);
-
-
-
-
+export default new DataSource(dbConfig);
 
 // import { AppDataSource } from "./data-source";
 
 // AppDataSource.initialize()
 
 // module.exports = {AppDataSource}
-
-
-
-
-
 
 // import { AppDataSource } from "./data-source";
 

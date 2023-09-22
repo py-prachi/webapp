@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:16.0-alpine3.18
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: webapp
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432

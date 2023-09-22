@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 
 import { User } from './entity/User';
+import JwtService from './jwt-service';
 
 
 require('dotenv').config(); // Load environment variables from .env file
@@ -43,8 +44,9 @@ app.post('/api/webapp/login',async (req,res)=>
       if (!user || user.password !== password) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
-      const token = jwt.sign({ sub: userName }, secretKey);
-    
+
+      const Jwtservice = new JwtService(secretKey!);
+      const token = Jwtservice.generateToken(userName)
       res.json({token:token});
       console.log(token);
     } catch(error){

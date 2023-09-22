@@ -1,10 +1,12 @@
+//data-source.ts
+
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entity/User";
-//import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
+import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 require("dotenv").config();
 
-const AppDataSource = new DataSource({
+const dbConfig: PostgresConnectionOptions = {
     type: (process.env.DB_TYPE || "postgres") as "postgres",
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT || "5432"),  
@@ -14,8 +16,10 @@ const AppDataSource = new DataSource({
     synchronize: process.env.DB_SYNCHRONIZE === "true",  
     logging: process.env.DB_LOGGING === "true",  
     entities: [User],
-    //migrations: [__dirname + '/migrations/*.ts'],
     subscribers: [],
-});
+};
 
-export { AppDataSource };
+const AppDataSource = new DataSource(dbConfig);
+export { AppDataSource , dbConfig};
+
+

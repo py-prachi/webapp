@@ -1,8 +1,6 @@
 import express from 'express';
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
-import { User } from './entity/User';
-import JwtService from './jwt-service';
 import { registerUser } from './controller/registrationController';
 import { userLogin } from './controller/userController';
 

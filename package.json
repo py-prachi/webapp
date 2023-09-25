@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose",
+    "test:watch": "jest --watch",
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/index.ts",
     "start": "ts-node src/index.ts",
     "typeorm": "typeorm-ts-node-commonjs -d database/ormconfig.ts",

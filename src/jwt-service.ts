@@ -1,18 +1,11 @@
 // jwt.service.ts
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Load environment variables from .env file
 
-class JwtService {
-  private secretKey: string;
-
-  constructor(secretKey: string) {
-    this.secretKey = secretKey;
-  }
-
+console.log("************* In JWT Services *************")
+const secretKey = process.env.SECRET_KEY;
   
-  generateToken(sub: string): string {
-    const token = jwt.sign({ sub }, this.secretKey);
-    return jwt.sign({ sub }, this.secretKey);
-  }
+export const generateToken = (sub:string) => {
+    const token = jwt.sign( {sub } ,secretKey);
+    return token;
 }
-
-export default JwtService;

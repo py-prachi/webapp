@@ -1,14 +1,12 @@
 import express from 'express';
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
-
 import { User } from './entity/User';
 import JwtService from './jwt-service';
-
+import { registerUser } from './controller/registrationController';
+import { userLogin } from './controller/userController';
 
 require('dotenv').config(); // Load environment variables from .env file
-
-const secretKey = process.env.SECRET_KEY;
 
 const app = express();
 app.use(express.urlencoded({extended: true}));
@@ -28,32 +26,14 @@ app.use(express.json());
 })();
 
 
-var { expressjwt: jwt } = require("express-jwt");
-var jwt = require('jsonwebtoken');
+//route to login a User
+app.post('/api/webapp/login',userLogin);
 
-app.post('/api/webapp/login',async (req,res)=>
-{
-  console.log(req.body);
-  const { userName,password } = req.body;
-  console.log(userName, password);
-    
-    try {
-      const userRepository = AppDataSource.getRepository(User);
-      const user = await userRepository.findOne({ where: { email : userName } });
-      console.log(user?.email, user?.password, user?.id)
-      if (!user || user.password !== password) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
 
-      const Jwtservice = new JwtService(secretKey!);
-      const token = Jwtservice.generateToken(userName)
-      res.json({token:token});
-      console.log(token);
-    } catch(error){
-        console.error("Error authenticating user:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
+//route to register a New User
+app.post('/api/webapp/register',registerUser);
+
+
 
 const port = process.env.PORT || 8080
 app.listen(port,() => console.log(`Listening on port ${port}..`));

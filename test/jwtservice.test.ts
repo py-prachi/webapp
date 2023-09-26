@@ -14,7 +14,6 @@ describe('jwtservice', () => {
 
         const token = generateToken("test")
         const expectedToken = atob(token.split(".")[1]);
-        //console.debug("Token generated is : ", token);
         expect(JSON.parse(expectedToken).sub).toBe("test")
           
     })

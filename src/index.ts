@@ -43,11 +43,10 @@ beforeAll(async ()=>{
   });
 });
 
-afterAll(async () => {
-  server.close(() => {
-    console.log('Server Closed');
-  });
-})
+afterAll(async()=>{
+  server.close();
+});
+
 
 
 export default app;

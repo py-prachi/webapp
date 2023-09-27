@@ -37,11 +37,16 @@ const port = process.env.PORT || 8080
 let server:any;
 
 beforeAll(async ()=>{
-  server = app.listen(port,() => console.log(`Listening on port ${port}..`));
+  server = app.listen(port,() => {
+    console.log(`Server started on port ${port}..`);
+    
+  });
 });
 
 afterAll(async () => {
-  server.close();
+  server.close(() => {
+    console.log('Server Closed');
+  });
 })
 
 

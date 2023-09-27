@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import app from "../src/index";
-import { authenticateUser } from "../src/service/userData";
+import { authenticateUser } from "../src/service/authenticateUser";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
 

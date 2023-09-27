@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source"
 import { Request, Response } from "express"
 import { User } from "../entity/User"
 import { generateToken } from '../jwt-service';
-import { authenticateUser } from "../service/userData";
+import { authenticateUser } from "../service/authenticateUser";
 
 export const userLogin = async (req: Request, res: Response) => {
 
@@ -16,10 +16,9 @@ export const userLogin = async (req: Request, res: Response) => {
         return res.status(400).json({ message: 'Username and password are required.' });
     }
         try {
-            const user = await authenticateUser(userName);
+          const user = await authenticateUser(userName,password);
           
-          console.log(user?.email, user?.password, user?.id)
-          if (!user || user.password !== password) {
+          if (!user) {
             console.error("Authentication failed for user:", userName);
             return res.status(401).json({ message: "Invalid credentials" });
           }
@@ -28,6 +27,7 @@ export const userLogin = async (req: Request, res: Response) => {
           
         } catch(error){
             console.error("Error authenticating user:", error);
+
             res.status(500).json({ message: "Server error" });
         }
     };

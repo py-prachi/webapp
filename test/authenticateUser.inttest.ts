@@ -17,13 +17,14 @@ describe("Authenticate User Function", () => {
   it("should return a user when match is found", async () => {
     // given
     const email = "test@technogise.com";
+    const password = "test1234"
     const existingUser = new User();
     existingUser.email = email;
-    existingUser.password = "test1234";
+    existingUser.password = password;
     await existingUser.save();
 
     // when
-    const user = await authenticateUser(email);
+    const user = await authenticateUser(email,password);
 
     // then
     expect(user).toBeDefined();

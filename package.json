@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --verbose",
     "inttest": "npm run migration:run && jest --config=jest.inttest.config.js",
-    "inttest:local": "npm run docker-compose-run npm run inttest && npm run docker-compose-down",
+    "inttest:ci": "npm run docker-compose-run npm run inttest && npm run docker-compose-down",
     "docker-compose-run": "docker-compose -p webapp run test",
     "docker-compose-down": "docker-compose -p webapp down --remove-orphans",
     "test:watch": "jest --watch",

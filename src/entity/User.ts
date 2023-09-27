@@ -26,6 +26,13 @@ class User extends BaseEntity {
   })
   password!: string;
 
+  @Column({
+    type: "enum",
+    enum: ["admin", "user"],
+    default: "user", 
+  })
+  role!: string;
+
   @CreateDateColumn()
   created_at!: Date;
 

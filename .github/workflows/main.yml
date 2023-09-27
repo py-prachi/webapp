@@ -27,4 +27,4 @@ jobs:
           compose-file: "./docker-compose.yml"
           down-flags: "--volumes"
           test-container: test
-          test-command: "npm inttest"
+          test-command: "npm run inttest"

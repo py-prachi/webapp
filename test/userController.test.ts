@@ -41,17 +41,15 @@ describe("Authentication", () => {
 
   it("should return 200 and a token when user is authenticated", async () => {
     authenticateUserMock.mockResolvedValue({
-      userName: "validuser", 
-      password: "validpassword"
-    })
-    mockGenToken.mockReturnValue('mockedToken');
+      userName: "validuser",
+      password: "validpassword",
+    });
+    mockGenToken.mockReturnValue("mockedToken");
 
     const response = await request(app)
       .post("/api/webapp/login")
       .send({ userName: "validuser", password: "validpassword" });
     expect(response.status).toBe(200);
-    expect(response.body.token).toBe('mockedToken')
+    expect(response.body.token).toBe("mockedToken");
   });
-
 });
-

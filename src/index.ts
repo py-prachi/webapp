@@ -34,7 +34,16 @@ app.post('/api/webapp/register',registerUser);
 
 
 const port = process.env.PORT || 8080
-app.listen(port,() => console.log(`Listening on port ${port}..`));
+let server:any;
+
+beforeAll(async ()=>{
+  server = app.listen(port,() => console.log(`Listening on port ${port}..`));
+});
+
+afterAll(async () => {
+  server.close();
+})
+
 
 export default app;
 

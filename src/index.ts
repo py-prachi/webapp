@@ -34,20 +34,14 @@ app.post('/api/webapp/register',registerUser);
 
 
 const port = process.env.PORT || 8080
-let server:any;
+let httpserver:any;
 
-beforeAll(async ()=>{
-  server = app.listen(port,() => {
-    console.log(`Server started on port ${port}..`);
-    
-  });
+
+httpserver = app.listen(port,() => {
+  console.log(`Server started on port ${port}..`);
 });
-
-afterAll(async()=>{
-  server.close();
-});
-
-
 
 export default app;
+//export {app, httpserver};
+
 

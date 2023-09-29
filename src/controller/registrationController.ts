@@ -7,8 +7,8 @@ import { User } from '../entity/User';
 export const registerUser = async (req: Request, res: Response) => {
   console.log('In Register User Route', req.body)  
   
-  const { userName,password } = req.body;
-  console.log(userName,password);
+  const { userName,password,role } = req.body;
+  console.log(userName,password,role);
 
   // Validate input data (e.g., username and password constraints)
   if (!userName || !password) {
@@ -21,7 +21,7 @@ export const registerUser = async (req: Request, res: Response) => {
   const newUser = new User();
   newUser.email = userName;
   newUser.password = password; // Hash the password before saving (use a bcrypt library)
-
+  newUser.role = role;
   try {
     await userRepository.save(newUser);
     return res.status(201).json({ message: 'User registered successfully.' });

@@ -22,8 +22,8 @@ export const userLogin = async (req: Request, res: Response) => {
             console.error("Authentication failed for user:", userName);
             return res.status(401).json({ message: "Invalid credentials" });
           }
-          const token = generateToken(userName)
-          res.json({token:token});
+          const token = generateToken(user.email, user.role)
+              res.json({token:token});
           
         } catch(error){
             console.error("Error authenticating user:", error);
@@ -32,4 +32,3 @@ export const userLogin = async (req: Request, res: Response) => {
         }
     };
     
-//export {UserController};

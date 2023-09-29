@@ -3,6 +3,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import { registerUser } from './controller/registrationController';
 import { userLogin } from './controller/userController';
+import { addProduct } from './controller/productController';
 
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -32,6 +33,8 @@ app.post('/api/webapp/login',userLogin);
 app.post('/api/webapp/register',registerUser);
 
 
+//route to add a Product to catalog
+app.post('/api/webapp/product/add', addProduct);
 
 const port = process.env.PORT || 8080
 let httpserver:any;

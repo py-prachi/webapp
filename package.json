@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose ",
+    "test": "jest --verbose --forceExit",
     "inttest": "npm run migration:run && jest --config=jest.inttest.config.js",
     "inttest:ci": "npm run docker-compose-run npm run inttest && npm run docker-compose-down",
     "e2etest": "npm run migration:run && jest --config=jest.e2etest.config.js --forceExit",

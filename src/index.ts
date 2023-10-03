@@ -3,7 +3,8 @@ import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 import { registerUser } from './controller/registrationController';
 import { userLogin } from './controller/userController';
-import { addProduct } from './controller/productController';
+import { productControl } from './controller/productController';
+const  checkToken  = require ('./check-token')
 
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.urlencoded({extended: true}));
  
 app.use(express.json());
+//app.use(checkToken);
 
 
 (async () => {
@@ -34,7 +36,7 @@ app.post('/api/webapp/register',registerUser);
 
 
 //route to add a Product to catalog
-app.post('/api/webapp/product/add', addProduct);
+app.post('/api/webapp/product/add', checkToken, productControl);
 
 const port = process.env.PORT || 8080
 let httpserver:any;

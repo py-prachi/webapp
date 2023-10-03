@@ -68,7 +68,7 @@ import {
   
     @UpdateDateColumn()
     updated_at!: Date;
-    username: any;
+    
   }
   
   export { Products };

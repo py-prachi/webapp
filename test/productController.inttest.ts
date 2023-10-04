@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import app from "../src/index";
-import { addProduct } from "../src/service/addProduct";
+import { addProduct } from "../src/service/productService";
 import { AppDataSource } from "../src/data-source";
 import { Products } from "../src/entity/Products";
 

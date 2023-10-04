@@ -1,10 +1,10 @@
 import request from "supertest";
 import { response } from "express";
-import { addProduct } from "../src/service/addProduct";
+import { addProduct } from "../src/service/productService";
 import app from "../src/index";
 import { AppDataSource } from "../src/data-source";
 
-jest.mock("../src/service/addProduct");
+jest.mock("../src/service/productService");
 const addProductMock = addProduct as jest.Mock;
 
 jest.mock("../src/data-source");

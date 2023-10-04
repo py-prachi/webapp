@@ -20,3 +20,25 @@ export const authenticateUser = async (
     return null;
   }
 };
+
+
+export const addNewUser = async (
+  userName: string,
+  password: string,
+  role:string
+) => {
+  const userRepository = AppDataSource.getRepository(User)
+        
+  const newUser = new User();
+  newUser.email = userName;
+  newUser.password = password; 
+  newUser.role = role;
+
+    try {
+      const user = await userRepository.save(newUser);
+      return user
+    } catch (error) {
+        console.error("Error adding user:", error);
+        return null;
+    }
+};

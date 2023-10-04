@@ -1,12 +1,12 @@
 import request from "supertest";
 import { response } from "express";
-import { authenticateUser } from "../src/service/authenticateUser";
+import { authenticateUser } from "../src/service/userService";
 import app from "../src/index";
 import { AppDataSource } from "../src/data-source";
 import { generateToken } from "../src/jwt-service";
 
 
-jest.mock("../src/service/authenticateUser");
+jest.mock("../src/service/userService");
 const authenticateUserMock = authenticateUser as jest.Mock;
 
 

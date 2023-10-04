@@ -4,7 +4,7 @@ import app from "../src/index";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
 import { userLogin } from "../src/controller/userController";
-import { productControl } from "../src/controller/productController";
+import { productAddControl } from "../src/controller/productController";
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config;

@@ -1,7 +1,9 @@
+import { DeleteResult } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Products } from "../entity/Products";
+import { UpdateResult } from "typeorm/driver/mongodb/typings";
 
-export const addProduct = async (
+export const create = async (
   productName: string,
   price: number,
   quantity:number
@@ -22,7 +24,7 @@ export const addProduct = async (
     }
 };
 
-export const getProducts = async ()=> {
+export const getAll = async ()=> {
     try {
         const productRepository = AppDataSource.getRepository(Products)
         const product = await productRepository.find();
@@ -33,7 +35,7 @@ export const getProducts = async ()=> {
     }
 };
 
-export const getProductById = async (productId:number)=> {
+export const getById = async (productId:number)=> {
     try {
         console.log("In product service for find by id:", productId);
         const productRepository = AppDataSource.getRepository(Products)
@@ -44,12 +46,19 @@ export const getProductById = async (productId:number)=> {
         return null;
     }
 };
-export const delProductById = async (productId:number)=> {
+export const del = async (productId:number)=> {
     try {
         console.log("In product service for delete by id:", productId);
         const productRepository = AppDataSource.getRepository(Products)
-        const product = await productRepository.delete(productId);
-        return product
+        const product_to_delete = await productRepository.findOne({ where: { product_id: productId } });
+        console.log("found prod to delete: ", product_to_delete);
+        
+        if (!product_to_delete){
+            console.log("product id not found: ", productId)
+            return null}
+        
+        const deletionResult: DeleteResult = await productRepository.delete(productId);
+        return deletionResult.affected === 1;
     } catch (error) {
         console.error(`Error fetching product by id (${productId}):`, error);
         return null;
@@ -58,7 +67,7 @@ export const delProductById = async (productId:number)=> {
 
   
 
-export const updateProduct = async (
+export const update = async (
     productId:number,
     productName: string,
     price: number,

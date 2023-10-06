@@ -1,11 +1,11 @@
 import request from "supertest";
 import { response } from "express";
 import app from "../src/index";
-import { addProduct } from "../src/service/productService";
+import { create, del, getAll, getById, update } from "../src/service/productService";
 import { AppDataSource } from "../src/data-source";
 import { Products } from "../src/entity/Products";
 
-describe("Add Product Function", () => {
+describe("CRUD operations on Product", () => {
   beforeAll(async () => {
     await AppDataSource.initialize();
   });
@@ -21,7 +21,7 @@ describe("Add Product Function", () => {
     const quantity = 10 ;
     
     // when
-    const product = await addProduct(productName,price,quantity);
+    const product = await create(productName,price,quantity);
     console.log("Product: ", product);
     
     // then
@@ -37,4 +37,50 @@ describe("Add Product Function", () => {
     expect(product!.created_at).toBeDefined();
     expect(product!.updated_at).toBeDefined();  
   });
+
+  it("should fetch all products from the product table", async () => {
+    await create("Product2",1000,10);
+    await create("Product3",1000,10);
+
+    // Act
+    const products = await getAll();
+    console.log(products);
+    // Assert
+    expect(products?.length).toBeGreaterThan(0);
+  }); 
+
+  it("should fetch specific product from the product table", async () => {
+    
+    const productId = 1
+    // Act
+    const products = await getById(productId);
+    console.log(products);
+    // Assert
+    expect(products?.product_id).toBe(productId);
+  }); 
+
+  it("should update specific product", async () => {
+    
+    const productId = 1
+    // Act
+    const products = await update(1,"updated_product",100,10);
+    console.log(products);
+    // Assert
+    expect(products?.product_id).toBe(productId);
+    expect(products?.product_name).toBe("updated_product");
+
+  }); 
+  it("should delete specific product", async () => {
+    
+    const productId = 3
+    // Act
+    const deleted_product_status = await del(productId);
+    console.log(deleted_product_status);
+    // Assert
+    expect(deleted_product_status).toBe(true);
+   
+    
+  }); 
+  
+
 });

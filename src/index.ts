@@ -6,6 +6,7 @@ import { userLogin, registerUser } from './controller/userController';
 import { addProduct, getProducts, getProductById, updateProduct, deleteProduct } from './controller/productController';
 
 import {authUser} from  './middleware/authorizer';
+import { addDiscount, getDiscount, productDiscount } from './controller/discountController';
 
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -50,6 +51,13 @@ app.put('/api/admin/product/:id', authUser, updateProduct);
 
 //route to delete a product from the catalog
 app.delete('/api/admin/product/:id', authUser, deleteProduct);
+
+
+app.post('/api/admin/discount', authUser, addDiscount);
+
+app.get('/api/admin/discount', authUser, getDiscount);
+
+app.post('/api/admin/product/:productId/discount/:discountId', authUser, productDiscount );
 
 
 const port = process.env.PORT || 8080

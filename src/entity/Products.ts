@@ -4,9 +4,12 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    ManyToMany,
+    JoinTable,
   } from "typeorm";
   
-  import { Entity } from "typeorm";
+import { Entity } from "typeorm";
+import { Discount } from "./discount";
 
   enum ProductStatus {
     AVAILABLE = "available",
@@ -68,7 +71,23 @@ import {
   
     @UpdateDateColumn()
     updated_at!: Date;
-    
+
+    @ManyToMany((type) => Discount,{
+      cascade: true,
+    })
+    @JoinTable({
+      name: "ProductDiscount",
+      joinColumn: {
+        name: "products",
+        referencedColumnName: 'product_id'
+      },
+      inverseJoinColumn: {
+        name: "discount",
+        referencedColumnName: 'discount_id'
+      }
+    })
+    discounts!: Discount[];
+
   }
   
   export { Products };

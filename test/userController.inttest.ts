@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import app from "../src/index";
-import { authenticateUser } from "../src/service/authenticateUser";
+import { authenticateUser } from "../src/service/userService";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
 
@@ -17,10 +17,12 @@ describe("Authenticate User Function", () => {
   it("should return a user when match is found", async () => {
     // given
     const email = "test@technogise.com";
-    const password = "test1234"
+    const password = "test1234";
+    const role = "user";
     const existingUser = new User();
     existingUser.email = email;
     existingUser.password = password;
+    existingUser.role = role;
     await existingUser.save();
 
     // when
@@ -32,5 +34,6 @@ describe("Authenticate User Function", () => {
     expect(user!.created_at).toBeDefined();
     expect(user!.updated_at).toBeDefined();
     expect(user!.id).toBeDefined();
+    expect(user!.role).toBe("user");
   });
 });

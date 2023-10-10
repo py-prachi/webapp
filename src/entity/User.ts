@@ -38,7 +38,7 @@ class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at!: Date;
-  username: any;
+  
 }
 
 export { User };

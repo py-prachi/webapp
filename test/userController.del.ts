@@ -1,22 +1,43 @@
 import request from "supertest";
 import { response } from "express";
-import { authenticateUser } from "../src/service/authenticateUser";
+import { authenticateUser } from "../src/service/userService";
 import app from "../src/index";
 import { AppDataSource } from "../src/data-source";
 import { generateToken } from "../src/jwt-service";
-import exp from "constants";
 
-jest.mock("../src/service/authenticateUser");
+
+jest.mock("../src/service/userService");
 const authenticateUserMock = authenticateUser as jest.Mock;
 
+
+//const mockDataSource = AppDataSource.initialize as jest.Mock;
+// jest.resetModules();
+
 jest.mock("../src/data-source");
-const mockDataSource = AppDataSource.initialize as jest.Mock;
+const mockDataSource = jest.spyOn(AppDataSource, 'initialize');
+
+beforeAll(async () => {
+ });
+
+afterAll(async () => {
+  mockDataSource.mockRestore();
+  jest.clearAllMocks();
+  
+});
 
 jest.mock("../src/jwt-service");
 const mockGenToken = generateToken as jest.Mock;
+// beforeEach(() => {
+//   jest.resetModules();
+// });
+
+// afterEach(() => {
+//   jest.clearAllMocks();
+// });
 
 describe("Authentication", () => {
   it("should return 400 when no username or password", async () => {
+    jest.resetModules();
     const response = await request(app)
       .post("/api/webapp/login")
       .send({ userName: "", password: "" });

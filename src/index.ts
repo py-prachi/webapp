@@ -1,8 +1,11 @@
 import express from 'express';
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
-import { registerUser } from './controller/registrationController';
-import { userLogin } from './controller/userController';
+
+import { userLogin, registerUser } from './controller/userController';
+import { addProduct, getProducts, getProductById, updateProduct, deleteProduct } from './controller/productController';
+
+import {authUser} from  './middleware/authorizer';
 
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -10,6 +13,7 @@ const app = express();
 app.use(express.urlencoded({extended: true}));
  
 app.use(express.json());
+//app.use(checkToken);
 
 
 (async () => {
@@ -32,22 +36,31 @@ app.post('/api/webapp/login',userLogin);
 app.post('/api/webapp/register',registerUser);
 
 
+//route to add a Product to catalog
+app.post('/api/admin/product', authUser, addProduct);
+
+//route to get all Products from the catalog
+app.get('/api/admin/product', authUser, getProducts);
+
+//route to get product by id from the catalog
+app.get('/api/admin/product/:id', authUser, getProductById);
+
+//route to update a product from the catalog
+app.put('/api/admin/product/:id', authUser, updateProduct);
+
+//route to delete a product from the catalog
+app.delete('/api/admin/product/:id', authUser, deleteProduct);
+
 
 const port = process.env.PORT || 8080
-let server:any;
+let httpserver:any;
 
-beforeAll(async ()=>{
-  server = app.listen(port,() => {
-    console.log(`Server started on port ${port}..`);
-    
-  });
+
+httpserver = app.listen(port,() => {
+  console.log(`Server started on port ${port}..`);
 });
-
-afterAll(async()=>{
-  server.close();
-});
-
-
 
 export default app;
+//export {app, httpserver};
+
 

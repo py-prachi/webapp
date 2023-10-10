@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --verbose",
+    "test": "jest --verbose --forceExit",
     "inttest": "npm run migration:run && jest --config=jest.inttest.config.js",
     "inttest:ci": "npm run docker-compose-run npm run inttest && npm run docker-compose-down",
-    "e2etest": "npm run migration:run && jest --config=jest.e2etest.config.js",
+    "e2etest": "npm run migration:run && jest --config=jest.e2etest.config.js --forceExit",
     "e2etest:ci": "npm run docker-compose-run npm run e2etest && npm run docker-compose-down",
     "docker-compose-run": "docker-compose -p webapp run test",
     "docker-compose-down": "docker-compose -p webapp down --remove-orphans",

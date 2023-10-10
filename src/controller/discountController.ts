@@ -1,9 +1,10 @@
 
 import { Request, Response } from 'express';
 
-import { create,getAll, getDiscById } from '../service/discountService';
+import { apply, create,getAll, getDiscById, update } from '../service/discountService';
+import { DiscountType } from '../entity/discount';
 import { getById } from '../service/productService';
-import { Discount } from '../entity/discount';
+
 
 const jwt = require('jsonwebtoken');
 
@@ -12,20 +13,27 @@ export const addDiscount = async (req: Request, res: Response) => {
   console.log('In Add Discount Route', req.body)  
   
   const { 
-    coupon,
-    //discount_type:DiscountType,
+    coupon ,
+    discount_type,
     discount_rate,
     startDate,
     endDate 
     } = req.body;
-  
-    if (!coupon || !discount_rate ) {
-    return res.status(400).json({
-    message: 'Coupon name, discount Rate missing' });
-  }
     
-  try {
-    const discount = await create(coupon,discount_rate,startDate,endDate);
+    if (!coupon || !discount_rate ) {
+        console.debug("Returning from 1st If");
+        return res.status(400).json({
+            message: 'Coupon name, discount Rate missing' });
+    }
+    //console.debug("discount type: ", discount_type, typeof(discount_type));
+    if(Object.values(DiscountType).includes(discount_type)){
+        console.debug("Returning from 2nd If");
+        return res.status(400).json({
+            message: 'Incorrect discount Type, should be flat or percent ' });
+    }
+    try {
+    const discount = await create(coupon,discount_type,discount_rate,startDate,endDate);
+
     if (discount)
     return res.status(201).json({ message: 'Discount added successfully.' });
     } catch(error){
@@ -51,8 +59,51 @@ export const getDiscount = async (req: Request, res: Response) => {
       }
 };
 
-export const productDiscount = async (req: Request, res: Response) => {
-    console.log('In Apply Discount Route');  
+export const updateDiscount = async (req: Request, res: Response) => {
+  console.log('In Update Discount Route', req.body) 
+  const { 
+    coupon,
+    discount_rate,
+    status,
+    startDate,
+    endDate 
+    } = req.body;
+       
+  if (!coupon || !discount_rate ) {
+    return res.status(400).json({
+    message: 'Coupon name,discount_rate field missing' });
+  }
+  const { id } = req.params; 
+  const discountId = parseInt(id, 10); 
+  console.log("finding discount for id :", discountId);
+  if (isNaN(discountId)) {
+    return res.status(400).json({ message: "Invalid discount ID" });
+  }
+
+  try {
+    const discount = await update(discountId,coupon,discount_rate,status,startDate,endDate );
+    
+    
+    if (!discount) {
+      console.log ( "inside dicount not found: ", discount);
+      return res.status(404).json({ message: "Discount not found" });
+    }
+
+    console.log ( "control reached here: ", discount);
+    return res.status(200).json({ message: "Discount id Updated" });
+  } catch (error) {
+    console.error("Error fetching discount by ID:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export const addProductDiscount = async (req: Request, res: Response) => {
+    console.log('In Update Discount Route', req.body) 
+    const { 
+      apply_date,
+      end_date
+      } = req.body;  
     try {
     const { productId, discountId } = req.params; 
 
@@ -65,11 +116,8 @@ export const productDiscount = async (req: Request, res: Response) => {
         return res.status(404).json({ message: "Product or discount not found" });
     }
 
-    product.discounts = [
-        
-        discount
-    ]
-    await product.save();
+    const product_discount = await apply(product,discount,apply_date,end_date );
+    
     return res.status(200).json({
         msg: "Discount applied to Product"
     })
@@ -80,96 +128,6 @@ export const productDiscount = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
-
-// export const getProductById = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params; 
-//     const productId = parseInt(id, 10); 
-//     console.log("finding product for id :", productId);
-//     if (isNaN(productId)) {
-//       return res.status(400).json({ message: "Invalid product ID" });
-//     }
-
-//     const product = await getById(productId);
-
-//     if (!product) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-//     return res.status(200).json({ product });
-//   } catch (error) {
-//     console.error("Error fetching product by ID:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-
-// export const deleteProduct = async (req: Request, res: Response) => {
-  
-  
-//     const { id } = req.params; 
-//     const productId = parseInt(id, 10); 
-//     console.log("in the delete route for :", productId);
-
-//     if (isNaN(productId)) {
-//       return res.status(400).json({ message: "Invalid product ID" });
-//     }
-
-//   try {
-//     const delProd = await del(productId);
-//     console.log ( "status of delProd: ", delProd);
-//     if (delProd){
-//       console.log("product deleted!!");
-//       return res.status(204).json({ message: "Product deleted" });;
-//     }else if (delProd == null){
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-//     // if(!delProd){
-//     //   return res.status(404).json({ message: "Product not found" });
-//     // }
-//     // return res.status(204).json({ message: "Product deleted" });
-
-
-//   } catch (error) {
-//     console.error("Error fetching product by ID:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
-
-
-// export const updateProduct = async (req: Request, res: Response) => {
-//   console.log('In Update Product Route', req.body) 
-//   const { 
-//     productName,
-//     price,
-//     quantity 
-//     } = req.body;
-       
-//   if (!productName || !price || !quantity) {
-//     return res.status(400).json({
-//     message: 'Product name,price or qty field missing' });
-//   }
-//   const { id } = req.params; 
-//   const productId = parseInt(id, 10); 
-//   console.log("finding product for id :", productId);
-//   if (isNaN(productId)) {
-//     return res.status(400).json({ message: "Invalid product ID" });
-//   }
-
-//   try {
-//     const product = await update(productId, productName,price,quantity );
-//     console.log ( "status of product: ", product);
-//     if (!product) {
-//       console.log ( "status of product: ", product);
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-
-//     return res.status(204).send();
-//   } catch (error) {
-//     console.error("Error fetching product by ID:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 
 

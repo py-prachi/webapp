@@ -3,6 +3,7 @@ import { response } from "express";
 import app from "../src/index";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
+import { Discount, DiscountType } from "../src/entity/discount";
 //import { userLogin } from "../src/controller/userController";
 //import { addProduct } from "../src/controller/productController";
 const jwt = require("jsonwebtoken");
@@ -163,4 +164,99 @@ afterAll(async () => {
       expect(response.status).toBe(204);
       
     });
+
+    it("Logged in as Admin, can add discount successfully", async () => {
+  
+      const token = jwt.sign({ 
+        userName: "test2", 
+        role: "admin" }, 
+        process.env.SECRET_KEY);
+    
+      const response = await request(app)
+        .post('/api/admin/discount')
+        .set('authorization', `Bearer ${token}`) 
+        .send({ 
+          coupon: "Coupon1", 
+          discount_type: DiscountType.FLAT,  
+          discount_rate: 10, 
+          startDate: new Date("2023-10-09"),
+          endDate: new Date("2023-10-19")
+        });
+      
+      
+      expect(response.status).toBe(201); 
+    });
+
+    it("Logged in as Admin, can get all discounts", async () => {
+    
+    
+      const token = jwt.sign({ 
+        userName: "test2", 
+        role: "admin" }, 
+        process.env.SECRET_KEY);
+    
+      const response = await request(app)
+        .get('/api/admin/discount')
+        .set('authorization', `Bearer ${token}`);
+      
+      expect(response.status).toBe(200);
+      
+    });
+
+    it("Logged in as Admin, can update specific discount", async () => {
+      
+    
+      const token = jwt.sign({ 
+        userName: "test2", 
+        role: "admin" }, 
+        process.env.SECRET_KEY);
+      const discountId = 1;
+       
+      const response = await request(app)
+        .put(`/api/admin/discount/${discountId}`)
+        .set('authorization', `Bearer ${token}`)
+        .send({ 
+          coupon: "UpdateCoupon", 
+          discount_rate: 10, 
+          status: true,
+          startDate: new Date("2023-10-09"),
+          endDate: new Date("2023-10-19")});
+      
+      expect(response.status).toBe(200);
+      
+    });
+
+    it("Logged in as Admin, can apply discount to a product successfully", async () => {
+      
+      
+
+      
+
+      
+      const token = jwt.sign({ 
+        userName: "test2", 
+        role: "admin" }, 
+        process.env.SECRET_KEY);
+
+      await request(app)
+      .post('/api/admin/product')
+      .set('authorization', `Bearer ${token}`) 
+      .send({ productName: "prod2", price:10, quantity: 5});
+      
+      const productId = 2;
+      const discountId = 1;
+    
+      const response = await request(app)
+        .post(`/api/admin/product/${productId}/discount/${discountId}`)
+        .set('authorization', `Bearer ${token}`) 
+        .send({ 
+          apply_date: new Date("2023-10-09"),
+          end_date: new Date("2023-10-19")
+        });
+      
+      
+      expect(response.status).toBe(200); 
+    });
+
+
 });

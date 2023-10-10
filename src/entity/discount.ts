@@ -2,12 +2,10 @@ import {
     BaseEntity,
     PrimaryGeneratedColumn,
     Column,  
-    ManyToMany
   } from "typeorm";
   
   import { Entity } from "typeorm";
-import { Products } from "./Products";
-
+  
   enum DiscountType {
     FLAT = "flat",
     PERCENT = "percent"
@@ -61,11 +59,9 @@ import { Products } from "./Products";
     type: 'timestamp' 
     })
     endDate: Date | undefined;
-    @ManyToMany((type) => Products,{
-        cascade : true,
-    })
-      products!: Products[];
+      productDiscounts: any;
+
 }
   
-  export { Discount };
+  export { Discount,DiscountType };
   

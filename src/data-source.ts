@@ -2,9 +2,10 @@
 
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "./entity/User";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
+import { User } from "./entity/User";
 import { Products } from "./entity/Products";
+import { ProductDiscount } from "./entity/ProductDiscounts";
 import { Discount } from "./entity/discount";
 require("dotenv").config();
 
@@ -17,7 +18,7 @@ const dbConfig: PostgresConnectionOptions = {
     database: process.env.DB_DATABASE,
     synchronize: process.env.DB_SYNCHRONIZE === "true",  
     logging: process.env.DB_LOGGING === "true",  
-    entities: [User, Products, Discount],
+    entities: [User, Products, Discount,ProductDiscount],
     subscribers: [],
 };
 

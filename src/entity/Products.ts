@@ -4,12 +4,11 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToMany,
-    JoinTable,
+    
   } from "typeorm";
   
 import { Entity } from "typeorm";
-import { Discount } from "./discount";
+
 
   enum ProductStatus {
     AVAILABLE = "available",
@@ -30,20 +29,20 @@ import { Discount } from "./discount";
     product_name!: string;
     
     @Column({
-        type: "text", // Description can be a longer text
-        nullable: true, // Nullable if descriptions are optional
+        type: "text",
+        nullable: true, 
     })
     description?: string;
     
     @Column({
         type: "varchar",
-        nullable: true, // Nullable if not all products have a category
+        nullable: true, 
     })
     category?: string;
     
     @Column({
         type: "decimal",
-        precision: 10, // Adjust precision and scale based on your needs
+        precision: 10, 
         scale: 2,
     })
     price!: number;
@@ -54,8 +53,8 @@ import { Discount } from "./discount";
     quantity!: number;
     
     @Column({
-        type: "jsonb", // Store specifications as JSONB for flexibility
-        nullable: true, // Nullable if not all products have specifications
+        type: "jsonb", 
+        nullable: true, 
     })
     specifications?: Record<string, unknown>;
     
@@ -71,22 +70,7 @@ import { Discount } from "./discount";
   
     @UpdateDateColumn()
     updated_at!: Date;
-
-    @ManyToMany((type) => Discount,{
-      cascade: true,
-    })
-    @JoinTable({
-      name: "ProductDiscount",
-      joinColumn: {
-        name: "products",
-        referencedColumnName: 'product_id'
-      },
-      inverseJoinColumn: {
-        name: "discount",
-        referencedColumnName: 'discount_id'
-      }
-    })
-    discounts!: Discount[];
+      productDiscount: any;
 
   }
   

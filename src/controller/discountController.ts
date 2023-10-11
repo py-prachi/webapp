@@ -25,8 +25,8 @@ export const addDiscount = async (req: Request, res: Response) => {
         return res.status(400).json({
             message: 'Coupon name, discount Rate missing' });
     }
-    //console.debug("discount type: ", discount_type, typeof(discount_type));
-    if(Object.values(DiscountType).includes(discount_type)){
+    console.debug("discount type**: ", discount_type, typeof(discount_type),Object.values(DiscountType));
+    if(!Object.values(DiscountType).includes(discount_type)){
         console.debug("Returning from 2nd If");
         return res.status(400).json({
             message: 'Incorrect discount Type, should be flat or percent ' });
@@ -99,7 +99,7 @@ export const updateDiscount = async (req: Request, res: Response) => {
 
 
 export const addProductDiscount = async (req: Request, res: Response) => {
-    console.log('In Update Discount Route', req.body) 
+    console.log('In addProductDiscount Route', req.body) 
     const { 
       apply_date,
       end_date
@@ -113,10 +113,11 @@ export const addProductDiscount = async (req: Request, res: Response) => {
     console.log("Discount: ", discount);
     
     if (!product || !discount){
+        console.log("inside if loop - prod not found")
         return res.status(404).json({ message: "Product or discount not found" });
     }
 
-    const product_discount = await apply(product,discount,apply_date,end_date );
+    await apply(product,discount,apply_date,end_date );
     
     return res.status(200).json({
         msg: "Discount applied to Product"

@@ -1,10 +1,11 @@
 import request from "supertest";
 
-import { apply, create, getAll, update } from "../src/service/discountService";
-import app from "../src/index";
+import { apply, create, getAll, getDiscById, update } from "../src/service/discountService";
+import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 import { Discount, DiscountType } from "../src/entity/discount";
 import { Products } from "../src/entity/Products";
+import { getById } from "../src/service/productService";
 
 jest.mock("../src/service/discountService");
 const addDiscountMock = create as jest.Mock;
@@ -16,7 +17,14 @@ jest.mock("../src/service/discountService");
 const updateDiscountMock = update as jest.Mock;
 
 jest.mock("../src/service/discountService");
-const productDiscountMock = apply as jest.Mock;
+const addproductDiscountMock = apply as jest.Mock;
+
+jest.mock("../src/service/productService");
+const getProductByIdMock = getById as jest.Mock;
+
+jest.mock("../src/service/discountService");
+const getDiscByIdMock = getDiscById as jest.Mock;
+
 
 
 
@@ -52,17 +60,17 @@ describe("Add Discounts", () => {
     expect(response.status).toBe(400);
   });
 
-  // it("should return 400 when discount type is not flat or percent", async () => {
-  //   const response = await request(app)
-  //     .post("/api/admin/discount")
-  //     .set('authorization', `Bearer ${token}`) 
-  //     .send({ 
-  //       coupon: "valid",
-  //       discount_type: "invalid",
-  //       discount_rate: "valid" 
-  //        });
-  //   expect(response.status).toBe(400);
-  // });
+  it("should return 400 when discount type is not flat or percent", async () => {
+    const response = await request(app)
+      .post("/api/admin/discount")
+      .set('authorization', `Bearer ${token}`) 
+      .send({ 
+        coupon: "valid",
+        discount_type: "invalid",
+        discount_rate: "valid" 
+         });
+    expect(response.status).toBe(400);
+  });
 
   
   it("should return 500 when discount cannot be added", async () => {
@@ -84,7 +92,7 @@ describe("Add Discounts", () => {
   it("should return 201 when product added successfully", async () => {
     addDiscountMock.mockResolvedValue({
       coupon: "validcoupon",
-      discount_type: DiscountType.FLAT,
+      discount_type: DiscountType.PERCENT,
       discount_rate: "validrate",
       startDate: "validstartDate",
       endDate: "validendDate"
@@ -95,7 +103,7 @@ describe("Add Discounts", () => {
       .set('authorization', `Bearer ${token}`) 
       .send({ 
         coupon: "validcoupon",
-        discount_type: DiscountType.FLAT,
+        discount_type: DiscountType.PERCENT,
         discount_rate: "validrate",
         startDate: "validstartDate",
         endDate: "validendDate"
@@ -242,27 +250,52 @@ describe('Update Product', ()=> {
 
 describe("Apply Discount",()=>{
 
-  // it("Should apply discount to product",async()=>{
-  //   productDiscountMock.mockResolvedValue({
-  //     product: Products,
-  //     discount: Discount,
-  //     applyDate: "validapplyDate",
-  //     endDate: "validendDate"
-  // });
+  it("Should apply discount to product",async()=>{
+    addproductDiscountMock.mockResolvedValue({
+      product: Products,
+      discount: Discount,
+      applyDate: "validapplyDate",
+      endDate: "validendDate"
+    });
+    getProductByIdMock.mockResolvedValue([
+      {productId: 1, productName: 'Product1', price: 10, quantity: 5 },
+    ]);
+
+    getDiscByIdMock.mockResolvedValue([
+     {discountId: 1, coupon: 'Coupon1', discountType: 'flat', discountRate: 50 },
+    ]);
   
-  // const discountId = 1;
-  // const productId = 1;
-  // const response = await request(app)
-  //   .put(`/api/admin/product/${productId}/discount/${discountId}`)
-  //   .set('authorization', `Bearer ${token}`) 
+    const discountId = 1;
+    const productId = 1;
+
+    const response = await request(app)
+    .post(`/api/admin/product/${productId}/discount/${discountId}`)
+    .set('authorization', `Bearer ${token}`) 
+    .send({ 
+      applyDate: "validapplyDate",
+      endDate: "validendDate"
+    });
+    expect(response.status).toBe(200);
+  });
+
+  // it("Should return 404 when discount or product NOT found",async()=>{
+  //   addproductDiscountMock.mockResolvedValue([]);
+  //   getProductByIdMock.mockResolvedValue([]);
+  //   getDiscByIdMock.mockResolvedValue([]);
+  
+  //   const discountId = 1;
+  //   const productId = 1;
+
+  //   const response = await request(app)
+  //   .post(`/api/admin/product/${productId}/discount/${discountId}`)
+  //   .set('authorization', `Bearer ${token}`)
   //   .send({ 
-  //     product: Products,
-  //     discount: Discount,
   //     applyDate: "validapplyDate",
   //     endDate: "validendDate"
-  //  });
-  // expect(response.status).toBe(200);
-//});
+  //   });
+
+  //   expect(response.status).toBe(404);
+  // });
 
 });
 

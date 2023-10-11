@@ -1,6 +1,6 @@
 import request from "supertest";
 import { response } from "express";
-import app from "../src/index";
+import app from "../src/app";
 import { apply, create, getAll, getDiscById, update } from "../src/service/discountService";
 import { AppDataSource } from "../src/data-source";
 import { Discount, DiscountType } from "../src/entity/discount";

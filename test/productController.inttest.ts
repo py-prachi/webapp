@@ -1,6 +1,6 @@
 import request from "supertest";
 import { response } from "express";
-import app from "../src/index";
+import app from "../src/app";
 import { create, del, getAll, getById, update } from "../src/service/productService";
 import { AppDataSource } from "../src/data-source";
 import { Products } from "../src/entity/Products";

@@ -2,7 +2,6 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source"
 import { Products } from '../entity/Products';
-//import { add } from '../service/productService';
 import { create, del, getById, getAll, update } from '../service/productService';
 const jwt = require('jsonwebtoken');
 

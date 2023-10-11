@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import { authenticateUser } from "../src/service/userService";
-import app from "../src/index";
+import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 import { generateToken } from "../src/jwt-service";
 

@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import { create, getById, getAll, del, update } from "../src/service/productService";
-import app from "../src/index";
+import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 
 jest.mock("../src/service/productService");

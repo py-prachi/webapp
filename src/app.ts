@@ -20,6 +20,10 @@ app.use(express.json());
   
 })();
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 import adminRouter from './routes/admin/adminRoutes';
 app.use('/api/admin',adminRouter)
 

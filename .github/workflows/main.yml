@@ -71,4 +71,4 @@ jobs:
          run: |
            echo "Running migrations with database environment variables"
            npm ci
-           npm run migration:run
+           npm run migration:run  -- --url ${{ secrets.DATABASE_URL }}

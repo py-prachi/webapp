@@ -11,6 +11,7 @@ require("dotenv").config();
 
 const dbConfig: PostgresConnectionOptions = {
   type: (process.env.DB_TYPE || "postgres") as "postgres",
+  ssl: process.env.DB_SSL === "true",
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT || "5432"),
   username: process.env.DB_USERNAME,

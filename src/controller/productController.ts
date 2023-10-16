@@ -2,7 +2,8 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from "../data-source"
 import { Products } from '../entity/Products';
-import { create, del, getById, getAll, update } from '../service/productService';
+import { create, del, getById, getAll, update, search } from '../service/productService';
+import { Console } from 'console';
 const jwt = require('jsonwebtoken');
 
 
@@ -12,7 +13,9 @@ export const addProduct = async (req: Request, res: Response) => {
   const { 
     productName,
     price,
-    quantity 
+    quantity,
+    category,
+    description
     } = req.body;
   
     if (!productName || !price || !quantity) {
@@ -21,7 +24,7 @@ export const addProduct = async (req: Request, res: Response) => {
   }
     
   try {
-    const product = await create(productName,price,quantity);
+    const product = await create(productName,price,quantity,category,description);
     if (product)
     return res.status(201).json({ message: 'Product added successfully.' });
     } catch(error){
@@ -131,6 +134,29 @@ export const updateProduct = async (req: Request, res: Response) => {
     }
 
     return res.status(204).send();
+  } catch (error) {
+    console.error("Error fetching product by ID:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const searchProduct = async (req: Request, res: Response) => {
+  try {
+    console.log("In the search product route!");
+    
+    const productName = req.query.productName as string | undefined;
+    const category = req.query.category as string | undefined;
+    const description = req.query.description as string | undefined;
+   
+    console.log("finding product :", productName,category,description);
+    
+    const product = await search(productName,category,description);
+
+    if (product === null || (Array.isArray(product) && product.length === 0)) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    console.log("returned product:", product);
+    return res.status(200).json({ products: product });
   } catch (error) {
     console.error("Error fetching product by ID:", error);
     return res.status(500).json({ message: "Server error" });

@@ -23,6 +23,6 @@ const dbConfig: PostgresConnectionOptions = {
   subscribers: [],
 };
 
-console.log("Config", dbConfig);
+
 const AppDataSource = new DataSource(dbConfig);
 export { AppDataSource, dbConfig };

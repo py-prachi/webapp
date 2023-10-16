@@ -68,7 +68,7 @@ afterAll(async () => {
     const response = await request(app)
       .post('/api/admin/product')
       .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "prod2", price:10, quantity: 5});
+      .send({ productName: "prod2", price:10, quantity: 5, category: "category1", description:""});
     
     
     expect(response.status).toBe(201); 
@@ -92,7 +92,7 @@ afterAll(async () => {
     const response = await request(app)
       .post('/api/admin/product')
       .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "prod3", price:10, quantity: 5});
+      .send({ productName: "prod3", price:10, quantity: 5,category: "category1", description:""});
     
     
     expect(response.status).toBe(403);
@@ -228,11 +228,6 @@ afterAll(async () => {
 
     it("Logged in as Admin, can apply discount to a product successfully", async () => {
       
-      
-
-      
-
-      
       const token = jwt.sign({ 
         userName: "test2", 
         role: "admin" }, 
@@ -241,7 +236,7 @@ afterAll(async () => {
       await request(app)
       .post('/api/admin/product')
       .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "prod2", price:10, quantity: 5});
+      .send({ productName: "prod2", price:10, quantity: 5,category: "category1", description:""});
       
       const productId = 2;
       const discountId = 1;
@@ -258,5 +253,35 @@ afterAll(async () => {
       expect(response.status).toBe(200); 
     });
 
+    it('should return products based on search criteria',async ()=>{
+
+      //given
+      const token = jwt.sign({ 
+        userName: "test2", 
+        role: "admin" }, 
+        process.env.SECRET_KEY); 
+
+      await request(app)
+      .post('/api/admin/product')
+      .set('authorization', `Bearer ${token}`) 
+      .send({ productName: "Dell Laptop", price:50000, quantity: 5,category: "Electronics", description:"high-performance"});
+      
+      await request(app)
+      .post('/api/admin/product')
+      .set('authorization', `Bearer ${token}`) 
+      .send({ productName: " Iphone", price:100000, quantity: 5,category: "Electronics", description:"long battery life"});
+
+    //when
+      const response = await request(app)
+      .get('/api/webapp/product/search')
+      .query({ productName: 'dell' , 
+               category: 'electronic',
+             })
+      .send();
+
+    //then
+      expect(response.status).toBe(200); 
+
+    });
 
 });

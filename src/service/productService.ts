@@ -1,12 +1,14 @@
-import { DeleteResult } from "typeorm";
+import { DeleteResult, ILike, Like } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Products } from "../entity/Products";
-import { UpdateResult } from "typeorm/driver/mongodb/typings";
+
 
 export const create = async (
   productName: string,
   price: number,
-  quantity:number
+  quantity:number,
+  category?:string | undefined,
+  description?:string | undefined,
 ) => {
     const productRepository = AppDataSource.getRepository(Products)
   
@@ -14,7 +16,9 @@ export const create = async (
     newProduct.product_name = productName;
     newProduct.price = price;
     newProduct.quantity = quantity;
-    
+    newProduct.category = category || undefined; 
+    newProduct.description = description || undefined; 
+
     try {
       const product = await productRepository.save(newProduct);
       return product
@@ -94,3 +98,24 @@ export const update = async (
     }
 };
 
+export const search = async (
+    productName: string  | undefined,
+    category: string | undefined,
+    description: string | undefined,
+    )=> {
+    try {
+        console.log("In search function....",productName,category,description);
+    
+        const product = await AppDataSource.getRepository(Products)
+        .createQueryBuilder('product')
+        .where('product.product_name ILIKE :productName', { productName: `%${productName}%` })
+        .orWhere('product.category ILIKE :category', { category: `%${category}%` })
+        .orWhere('product.description ILIKE :description', { description: `%${description}%` })
+        .getMany();
+
+        return product
+    } catch (error) {
+        console.error(`Error searching product`, error);
+        return null;
+    }
+};

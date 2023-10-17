@@ -1,6 +1,6 @@
 import request from "supertest";
 import { response } from "express";
-import { create, getById, getAll, del, update } from "../src/service/productService";
+import { create, getById, getAll, del, update, search } from "../src/service/productService";
 import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 
@@ -18,6 +18,10 @@ const deleteProductMock = del as jest.Mock;
 
 jest.mock("../src/service/productService");
 const updateProductMock = update as jest.Mock;
+
+jest.mock("../src/service/productService");
+const searchProductMock = search as jest.Mock;
+
 
 
 
@@ -49,7 +53,7 @@ describe("Add Products", () => {
     const response = await request(app)
       .post("/api/admin/product")
       .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "", price: "", quantity: "" });
+      .send({ productName: "", price: "", quantity: "",category:"", description:"" });
     expect(response.status).toBe(400);
   });
 
@@ -63,7 +67,9 @@ describe("Add Products", () => {
     .send({ 
       productName: "invalidproduct", 
       price: "invalidprice",
-      quantity: "invalidquantity"
+      quantity: "invalidquantity",
+      category: "invalidcategory", 
+      description: "invaliddescription"
    });
     expect(response.status).toBe(500);
   });
@@ -72,7 +78,9 @@ describe("Add Products", () => {
     addProductMock.mockResolvedValue({
       productName: "validproduct",
       price: "validprice",
-      quantity: "validquantity"
+      quantity: "validquantity",
+      category: "validcategory", 
+      description: "validdescription"
     });
     
     const response = await request(app)
@@ -81,7 +89,9 @@ describe("Add Products", () => {
       .send({ 
         productName: "validproduct", 
         price: "validprice",
-        quantity: "validquantity"
+        quantity: "validquantity",
+        category: "validcategory", 
+        description: "validdescription"
      });
     expect(response.status).toBe(201);
     
@@ -304,4 +314,71 @@ describe('Delete Product', ()=> {
     
     expect(response.status).toBe(500);
   });
+});
+
+
+
+describe('Search Products ', ()=> {
+
+  it("should return 200 and display product with given name",async()=>{
+    searchProductMock.mockResolvedValue([
+      {productId: 1, productName: 'Laptop', category: 'Electronics', 
+      description:'Mac Laptop', price: 10, quantity: 5 },
+      ]);
+    const productName = 'Laptop' ;
+    const response = await request(app)
+      .get(`/api/webapp/product/search?product_name=${productName}`)
+      
+    expect(response.status).toBe(200);
+    
+  })
+
+  it("should return 200 and display product with given category",async()=>{
+    searchProductMock.mockResolvedValue([
+      {productId: 1, productName: 'Laptop', category: 'Electronics', 
+      description:'Mac Laptop', price: 10, quantity: 5 },
+      ]);
+    const category = 'electronics' ;
+    const response = await request(app)
+      .get(`/api/webapp/product/search?category=${category}`)
+      
+    expect(response.status).toBe(200);
+    
+  })
+
+  it("should return 200 and display product with given description",async()=>{
+    searchProductMock.mockResolvedValue([
+      {productId: 1, productName: 'Laptop', category: 'Electronics', 
+      description:'Mac Laptop', price: 10, quantity: 5 },
+      ]);
+    const description = 'mac' ;
+    const response = await request(app)
+      .get(`/api/webapp/product/search?description=${description}`)
+      
+    expect(response.status).toBe(200);
+    
+  })
+
+  it("should return 404 when product NOT found in catalog",async()=>{
+    searchProductMock.mockResolvedValueOnce([]);
+    const description = 'mac' ;
+    const response = await request(app)
+      .get(`/api/webapp/product/search?description=${description}`)
+      
+    expect(response.status).toBe(404);
+    
+  })
+
+
+  it("should return 500 when product cannot be searched ",async()=>{
+    
+    searchProductMock.mockRejectedValue(new Error("Error searching Product"));
+
+    const description = 'invaliddescription' ;
+    const response = await request(app)
+      .get(`/api/webapp/product/search?description=${description}`)
+      
+    
+    expect(response.status).toBe(500);
+  })
 });

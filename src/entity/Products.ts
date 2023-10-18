@@ -3,11 +3,11 @@ import {
     PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    UpdateDateColumn,
-    
+    UpdateDateColumn  
   } from "typeorm";
   
 import { Entity } from "typeorm";
+import { Cart } from "./Cart";
 
 
   enum ProductStatus {
@@ -71,6 +71,9 @@ import { Entity } from "typeorm";
     @UpdateDateColumn()
     updated_at!: Date;
       productDiscount: any;
+      cart: any;
+    
+    
 
   }
   

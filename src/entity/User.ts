@@ -4,12 +4,15 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany
 } from "typeorm";
 
 import { Entity } from "typeorm";
+import { Cart } from "./Cart";
 
 @Entity("user")
 class User extends BaseEntity {
+  
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -38,6 +41,11 @@ class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at!: Date;
+  
+  
+  @OneToMany(() => Cart, (cart) => cart.user)
+  cart!: Cart[];
+  
   
 }
 

@@ -1,6 +1,13 @@
 import request from "supertest";
 import { response } from "express";
-import { create, getById, getAll, del, update, search } from "../src/service/productService";
+import {
+  create,
+  getById,
+  getAll,
+  del,
+  update,
+  search,
+} from "../src/service/productService";
 import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 
@@ -22,17 +29,13 @@ const updateProductMock = update as jest.Mock;
 jest.mock("../src/service/productService");
 const searchProductMock = search as jest.Mock;
 
-
-
-
 jest.mock("../src/data-source");
 
-const mockDataSource = jest.spyOn(AppDataSource, 'initialize');
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3QyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjk2MzI4OTEyfQ.bAoI6Zst1SFxuaagid_41vtiS7NlwjHmwgWoG-GXHnw";
+const mockDataSource = jest.spyOn(AppDataSource, "initialize");
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3QyIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjk2MzI4OTEyfQ.bAoI6Zst1SFxuaagid_41vtiS7NlwjHmwgWoG-GXHnw";
 
-beforeAll(async () => {
- 
-});
+beforeAll(async () => {});
 
 afterAll(async () => {
   mockDataSource.mockRestore();
@@ -47,30 +50,34 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-
 describe("Add Products", () => {
   it("should return 400 when no product name or price or quantity passed", async () => {
     const response = await request(app)
       .post("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "", price: "", quantity: "",category:"", description:"" });
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "",
+        price: "",
+        quantity: "",
+        category: "",
+        description: "",
+      });
     expect(response.status).toBe(400);
   });
 
-  
   it("should return 500 when product cannot be added", async () => {
     addProductMock.mockRejectedValue(new Error("Error adding Product"));
-    
+
     const response = await request(app)
       .post("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-    .send({ 
-      productName: "invalidproduct", 
-      price: "invalidprice",
-      quantity: "invalidquantity",
-      category: "invalidcategory", 
-      description: "invaliddescription"
-   });
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "invalidproduct",
+        price: "invalidprice",
+        quantity: "invalidquantity",
+        category: "invalidcategory",
+        description: "invaliddescription",
+      });
     expect(response.status).toBe(500);
   });
 
@@ -79,306 +86,297 @@ describe("Add Products", () => {
       productName: "validproduct",
       price: "validprice",
       quantity: "validquantity",
-      category: "validcategory", 
-      description: "validdescription"
+      category: "validcategory",
+      description: "validdescription",
     });
-    
+
     const response = await request(app)
       .post("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-      .send({ 
-        productName: "validproduct", 
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "validproduct",
         price: "validprice",
         quantity: "validquantity",
-        category: "validcategory", 
-        description: "validdescription"
-     });
+        category: "validcategory",
+        description: "validdescription",
+      });
     expect(response.status).toBe(201);
-    
   });
 });
 
-describe('Get all Products', ()=> {
-
-  it("should return 200 and display all the products from catalog",async()=>{
+describe("Get all Products", () => {
+  it("should return 200 and display all the products from catalog", async () => {
     getProductMock.mockResolvedValue([
-      {productName: 'Product1', price: 10, quantity: 5 },
-      {productName: 'Product2', price: 20, quantity: 25 },
+      { productName: "Product1", price: 10, quantity: 5 },
+      { productName: "Product2", price: 20, quantity: 25 },
     ]);
     const response = await request(app)
       .get("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-      
-    expect(response.status).toBe(200);
-    
-  })
+      .set("authorization", `Bearer ${token}`);
 
-  it("should return 404 when NO products are found in catalog",async()=>{
+    expect(response.status).toBe(200);
+  });
+
+  it("should return 404 when NO products are found in catalog", async () => {
     getProductMock.mockResolvedValueOnce([]);
     const response = await request(app)
       .get("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-      
-    expect(response.status).toBe(404);
-  })
+      .set("authorization", `Bearer ${token}`);
 
-  it("should return 500 when product cannot be fetched ",async()=>{
+    expect(response.status).toBe(404);
+  });
+
+  it("should return 500 when product cannot be fetched ", async () => {
     getProductMock.mockRejectedValue(new Error("Error fetching Product"));
-    
+
     const response = await request(app)
       .get("/api/admin/product")
-      .set('authorization', `Bearer ${token}`) 
-    
-    expect(response.status).toBe(500);
-  })
+      .set("authorization", `Bearer ${token}`);
 
+    expect(response.status).toBe(500);
+  });
 });
 
-describe('Get Products by ID', ()=> {
-
-  it("should return 200 and display all the products from catalog",async()=>{
+describe("Get Products by ID", () => {
+  it("should return 200 and display all the products from catalog", async () => {
     getProductByIdMock.mockResolvedValue([
-      {productId: 1, productName: 'Product1', price: 10, quantity: 5 },
-      ]);
-    const productId = 1 ;
+      { productId: 1, productName: "Product1", price: 10, quantity: 5 },
+    ]);
+    const productId = 1;
     const response = await request(app)
       .get(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      
+      .set("authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(200);
-    
-  })
+  });
 
-  it("should return 404 when product NOT found in catalog",async()=>{
+  it("should return 404 when product NOT found in catalog", async () => {
     getProductMock.mockResolvedValueOnce([]);
-    const productId = 1 ;
+    const productId = 1;
     const response = await request(app)
       .get(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      
-    expect(response.status).toBe(404);
-    
-  })
+      .set("authorization", `Bearer ${token}`);
 
-  it("should return 400 when product id is invalid",async()=>{
-   
-    const invalidProductId = "invalid-product-id"
+    expect(response.status).toBe(404);
+  });
+
+  it("should return 400 when product id is invalid", async () => {
+    const invalidProductId = "invalid-product-id";
     const response = await request(app)
       .get(`/api/admin/product/${invalidProductId}`)
-      .set('authorization', `Bearer ${token}`) 
-      
-    expect(response.status).toBe(400);
-  })
+      .set("authorization", `Bearer ${token}`);
 
-  it("should return 500 when product cannot be fetched ",async()=>{
-    
+    expect(response.status).toBe(400);
+  });
+
+  it("should return 500 when product cannot be fetched ", async () => {
     getProductByIdMock.mockRejectedValue(new Error("Error fetching Product"));
 
-    const invalidProductId = 101
+    const invalidProductId = 101;
     const response = await request(app)
       .get(`/api/admin/product/${invalidProductId}`)
-      .set('authorization', `Bearer ${token}`) 
-    
+      .set("authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(500);
-  })
+  });
 });
 
-
-
-describe('Update Product', ()=> {
-
-  
+describe("Update Product", () => {
   it("should return 204 when product updated successfully", async () => {
     updateProductMock.mockResolvedValue({
       productId: 1,
       productName: "validproduct",
       price: "validprice",
-      quantity: "validquantity"
+      quantity: "validquantity",
     });
-    
+
     const productId = 1;
     const response = await request(app)
       .put(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      .send({ 
-        productName: "validproduct", 
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "validproduct",
         price: "validprice",
-        quantity: "validquantity"
-     });
+        quantity: "validquantity",
+      });
     expect(response.status).toBe(204);
-    
-  
-});
-
-  it("should return 400 when product id is invalid",async()=>{
-    updateProductMock.mockResolvedValue([]);
-    const invalidProductId = "invalid-product-id" ;
-    const response = await request(app)
-      .put(`/api/admin/product/${invalidProductId}`)
-      .set('authorization', `Bearer ${token}`) 
-      .send({ 
-        productName: "validproduct", 
-        price: "validprice",
-        quantity: "validquantity"});
-      
-    expect(response.status).toBe(400);
-    
-  })
-  it("should return 400 when no product name or price or quantity passed", async () => {
-    const productId = 1;    
-    const response = await request(app)
-      .put(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      .send({ productName: "", price: "", quantity: "" });
-    
-      expect(response.status).toBe(400);
   });
 
-  it("should return 404 when product NOT found in catalog",async()=>{
+  it("should return 400 when product id is invalid", async () => {
+    updateProductMock.mockResolvedValue([]);
+    const invalidProductId = "invalid-product-id";
+    const response = await request(app)
+      .put(`/api/admin/product/${invalidProductId}`)
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "validproduct",
+        price: "validprice",
+        quantity: "validquantity",
+      });
+
+    expect(response.status).toBe(400);
+  });
+  it("should return 400 when no product name or price or quantity passed", async () => {
+    const productId = 1;
+    const response = await request(app)
+      .put(`/api/admin/product/${productId}`)
+      .set("authorization", `Bearer ${token}`)
+      .send({ productName: "", price: "", quantity: "" });
+
+    expect(response.status).toBe(400);
+  });
+
+  it("should return 404 when product NOT found in catalog", async () => {
     updateProductMock.mockResolvedValueOnce([]);
-    const productId = 1 ;
+    const productId = 1;
     const response = await request(app)
       .get(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      .send({ 
-        productName: "validproduct", 
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "validproduct",
         price: "validprice",
-        quantity: "validquantity"});
+        quantity: "validquantity",
+      });
 
     expect(response.status).toBe(404);
-    
-  })
+  });
 
   it("should return 500 when product cannot be updated", async () => {
     updateProductMock.mockRejectedValue(new Error("Error updating Product"));
-    const productId = 1 ;
+    const productId = 1;
     const response = await request(app)
       .put(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-    .send({ 
-      productName: "invalidproduct", 
-      price: "invalidprice",
-      quantity: "invalidquantity"
-   });
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productName: "invalidproduct",
+        price: "invalidprice",
+        quantity: "invalidquantity",
+      });
     expect(response.status).toBe(500);
   });
 });
 
-describe('Delete Product', ()=> {
-
-  it("should return 400 when product id is invalid",async()=>{
-    const invalidProductId = "invalid-product-id"
+describe("Delete Product", () => {
+  it("should return 400 when product id is invalid", async () => {
+    const invalidProductId = "invalid-product-id";
     const response = await request(app)
       .delete(`/api/admin/product/${invalidProductId}`)
-      .set('authorization', `Bearer ${token}`) 
-      
+      .set("authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(400);
   });
 
-//   it("should return 404 when product NOT found in catalog",async()=>{
-    
-//     deleteProductMock.mockReturnValue([]);
-//     const productId = 1 ;
-//     const response = await request(app)
-//       .delete(`/api/admin/product/${productId}`)
-//       .set('authorization', `Bearer ${token}`) 
-    
-      
-//     expect(response.status).toBe(404);
-  
-// });
+  it("should return 404 when product NOT found in catalog", async () => {
+    deleteProductMock.mockResolvedValueOnce(null);
+    const productId = 1;
+    const response = await request(app)
+      .delete(`/api/admin/product/${productId}`)
+      .set("authorization", `Bearer ${token}`);
 
-  it("should return 204 when product deleted successfully",async()=>{
+    expect(response.status).toBe(404);
+  });
+
+  it("should return 204 when product deleted successfully", async () => {
     deleteProductMock.mockResolvedValue([
-      {productId: 1, productName: 'Product1', price: 10, quantity: 5 },
-      ]);
-    const productId = 1 ;
+      { productId: 1, productName: "Product1", price: 10, quantity: 5 },
+    ]);
+    const productId = 1;
 
     const response = await request(app)
       .delete(`/api/admin/product/${productId}`)
-      .set('authorization', `Bearer ${token}`) 
-      
+      .set("authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(204);
-    
   });
 
-  it("should return 500 when product cannot be delete ",async()=>{
-    
+  it("should return 500 when product cannot be delete ", async () => {
     deleteProductMock.mockRejectedValue(new Error("Error deleting Product"));
-    const invalidProductId = 101
-    
+    const invalidProductId = 101;
+
     const response = await request(app)
-    .delete(`/api/admin/product/${invalidProductId}`)
-    .set('authorization', `Bearer ${token}`) 
-      
-    
+      .delete(`/api/admin/product/${invalidProductId}`)
+      .set("authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(500);
   });
 });
 
-
-
-describe('Search Products ', ()=> {
-
-  it("should return 200 and display product with given name",async()=>{
+describe("Search Products ", () => {
+  it("should return 200 and display product with given name", async () => {
     searchProductMock.mockResolvedValue([
-      {productId: 1, productName: 'Laptop', category: 'Electronics', 
-      description:'Mac Laptop', price: 10, quantity: 5 },
-      ]);
-    const productName = 'Laptop' ;
-    const response = await request(app)
-      .get(`/api/webapp/product/search?product_name=${productName}`)
-      
-    expect(response.status).toBe(200);
-    
-  })
+      {
+        productId: 1,
+        productName: "Laptop",
+        category: "Electronics",
+        description: "Mac Laptop",
+        price: 10,
+        quantity: 5,
+      },
+    ]);
+    const productName = "Laptop";
+    const response = await request(app).get(
+      `/api/webapp/product/search?product_name=${productName}`
+    );
 
-  it("should return 200 and display product with given category",async()=>{
+    expect(response.status).toBe(200);
+  });
+
+  it("should return 200 and display product with given category", async () => {
     searchProductMock.mockResolvedValue([
-      {productId: 1, productName: 'Laptop', category: 'Electronics', 
-      description:'Mac Laptop', price: 10, quantity: 5 },
-      ]);
-    const category = 'electronics' ;
-    const response = await request(app)
-      .get(`/api/webapp/product/search?category=${category}`)
-      
-    expect(response.status).toBe(200);
-    
-  })
+      {
+        productId: 1,
+        productName: "Laptop",
+        category: "Electronics",
+        description: "Mac Laptop",
+        price: 10,
+        quantity: 5,
+      },
+    ]);
+    const category = "electronics";
+    const response = await request(app).get(
+      `/api/webapp/product/search?category=${category}`
+    );
 
-  it("should return 200 and display product with given description",async()=>{
+    expect(response.status).toBe(200);
+  });
+
+  it("should return 200 and display product with given description", async () => {
     searchProductMock.mockResolvedValue([
-      {productId: 1, productName: 'Laptop', category: 'Electronics', 
-      description:'Mac Laptop', price: 10, quantity: 5 },
-      ]);
-    const description = 'mac' ;
-    const response = await request(app)
-      .get(`/api/webapp/product/search?description=${description}`)
-      
-    expect(response.status).toBe(200);
-    
-  })
+      {
+        productId: 1,
+        productName: "Laptop",
+        category: "Electronics",
+        description: "Mac Laptop",
+        price: 10,
+        quantity: 5,
+      },
+    ]);
+    const description = "mac";
+    const response = await request(app).get(
+      `/api/webapp/product/search?description=${description}`
+    );
 
-  it("should return 404 when product NOT found in catalog",async()=>{
+    expect(response.status).toBe(200);
+  });
+
+  it("should return 404 when product NOT found in catalog", async () => {
     searchProductMock.mockResolvedValueOnce([]);
-    const description = 'mac' ;
-    const response = await request(app)
-      .get(`/api/webapp/product/search?description=${description}`)
-      
+    const description = "mac";
+    const response = await request(app).get(
+      `/api/webapp/product/search?description=${description}`
+    );
+
     expect(response.status).toBe(404);
-    
-  })
+  });
 
-
-  it("should return 500 when product cannot be searched ",async()=>{
-    
+  it("should return 500 when product cannot be searched ", async () => {
     searchProductMock.mockRejectedValue(new Error("Error searching Product"));
 
-    const description = 'invaliddescription' ;
-    const response = await request(app)
-      .get(`/api/webapp/product/search?description=${description}`)
-      
-    
+    const description = "invaliddescription";
+    const response = await request(app).get(
+      `/api/webapp/product/search?description=${description}`
+    );
+
     expect(response.status).toBe(500);
-  })
+  });
 });

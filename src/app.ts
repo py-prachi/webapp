@@ -1,38 +1,32 @@
-import express from 'express';
+import express from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./data-source";
 
-require('dotenv').config(); 
+require("dotenv").config();
 
 const app = express();
-app.use(express.urlencoded({extended: true}));
- 
+app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
 
 (async () => {
-  try{
+  try {
     await AppDataSource.initialize();
-    console.log('Created DB connection');
+    console.log("Created DB connection");
   } catch (error) {
     console.error(error);
-    throw new Error("Unable to connect to DB")
+    throw new Error("Unable to connect to DB");
   }
-  
 })();
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
 });
 
-import adminRouter from './routes/admin/adminRoutes';
-app.use('/api/admin',adminRouter)
+import adminRouter from "./routes/admin/adminRoutes";
+app.use("/api/admin", adminRouter);
 
-import userRouter  from './routes/users/userRoutes';
-app.use('/api/webapp',userRouter)
-
-
+import userRouter from "./routes/users/userRoutes";
+app.use("/api/webapp", userRouter);
 
 export default app;
-
-
-

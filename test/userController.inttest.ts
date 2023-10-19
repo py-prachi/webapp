@@ -1,6 +1,3 @@
-import request from "supertest";
-import { response } from "express";
-import app from "../src/app";
 import { authenticateUser } from "../src/service/userService";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
@@ -26,7 +23,7 @@ describe("Authenticate User Function", () => {
     await existingUser.save();
 
     // when
-    const user = await authenticateUser(email,password);
+    const user = await authenticateUser(email, password);
 
     // then
     expect(user).toBeDefined();

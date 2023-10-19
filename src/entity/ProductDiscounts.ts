@@ -1,24 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from "typeorm";
-import { Products } from "./Products"; 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  JoinColumn,
+} from "typeorm";
+import { Products } from "./Products";
 import { Discount } from "./discount";
 
 @Entity("product_discount")
 class ProductDiscount {
   @PrimaryGeneratedColumn("uuid")
-  product_discount_id!: string; 
+  product_discount_id!: string;
 
   @ManyToOne(() => Products, (product) => product.productDiscount, {
-    onDelete: "CASCADE",  
-    onUpdate: "CASCADE", 
-  })
-  @JoinColumn({ name: "product_id" })  
-  product!: Products;
-
-  @ManyToOne(() => Discount, (discount) => discount.productDiscounts,{
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  @JoinColumn({name : "discount_id"})
+  @JoinColumn({ name: "product_id" })
+  product!: Products;
+
+  @ManyToOne(() => Discount, (discount) => discount.productDiscounts, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn({ name: "discount_id" })
   discount!: Discount;
 
   @Column({ type: "date" })
@@ -35,5 +43,3 @@ class ProductDiscount {
 }
 
 export { ProductDiscount };
-
-

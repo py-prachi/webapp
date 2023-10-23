@@ -1,12 +1,14 @@
 import { AppDataSource } from "../data-source";
 import { Cart } from "../entity/Cart";
+import { ProductDiscount } from "../entity/ProductDiscounts";
 import { Products } from "../entity/Products";
 import { User } from "../entity/User";
 
 export const createCartEntry = async (
   user: User,
   product: Products,
-  quantity: number
+  quantity: number,
+  discountApplied: number
 ) => {
   const cartRepository = AppDataSource.getRepository(Cart);
 
@@ -15,7 +17,7 @@ export const createCartEntry = async (
   newCartEntry.product = product;
   newCartEntry.quantity = quantity;
   newCartEntry.subtotal = product.price * quantity;
-  newCartEntry.discountApplied = 1; // yet to be populated
+  newCartEntry.discountApplied = discountApplied * quantity; 
   newCartEntry.total = newCartEntry.subtotal - newCartEntry.discountApplied;
   newCartEntry.status = "Open";
 
@@ -27,3 +29,18 @@ export const createCartEntry = async (
     return null;
   }
 };
+
+export const getProductDiscount = async (
+    productId: number
+  ) => {
+    try {
+      const ProductDiscountRepository = AppDataSource.getRepository(ProductDiscount);
+      const discounts = await ProductDiscountRepository.find({
+        where:{product:{product_id:productId}}
+      })
+        return discounts;
+    } catch (error) {
+      console.error("Error fetching discount:", error);
+      return null;
+    }
+  };

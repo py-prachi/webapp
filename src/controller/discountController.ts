@@ -18,19 +18,12 @@ export const addDiscount = async (req: Request, res: Response) => {
   const { coupon, discount_type, discount_rate, startDate, endDate } = req.body;
 
   if (!coupon || !discount_rate) {
-    console.debug("Returning from 1st If");
     return res.status(400).json({
       message: "Coupon name, discount Rate missing",
     });
   }
-  console.debug(
-    "discount type**: ",
-    discount_type,
-    typeof discount_type,
-    Object.values(DiscountType)
-  );
+
   if (!Object.values(DiscountType).includes(discount_type)) {
-    console.debug("Returning from 2nd If");
     return res.status(400).json({
       message: "Incorrect discount Type, should be flat or percent ",
     });

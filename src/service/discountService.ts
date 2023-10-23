@@ -1,7 +1,5 @@
-import { DeleteResult } from "typeorm";
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "../data-source"
 import { Discount, DiscountType } from "../entity/discount";
-import { EnumType } from "typescript";
 import { ProductDiscount } from "../entity/ProductDiscounts";
 import { Products } from "../entity/Products";
 
@@ -110,3 +108,20 @@ export const apply = async (
     return null;
   }
 };
+
+
+export const getProductDiscount = async (productId:number) => {
+  try {
+    console.log("In Product Discount service to find discount for product:",productId);
+    const productDiscountRepository = AppDataSource.getRepository(ProductDiscount);
+    const discount = await productDiscountRepository.find({
+      where: { product: { product_id: productId } },
+    });
+    return discount;
+  } catch (error) {
+    console.error(`Error fetching product by id (${productId}):`, error);
+    return null;
+  }
+};
+
+

@@ -1,17 +1,13 @@
 // product.controller.ts
 import { Request, Response } from "express";
-import { AppDataSource } from "../data-source";
-import { Products } from "../entity/Products";
 import {
-  create,
+  createProduct,
   del,
   getById,
   getAll,
   update,
   search,
 } from "../service/productService";
-import { Console } from "console";
-const jwt = require("jsonwebtoken");
 
 export const addProduct = async (req: Request, res: Response) => {
   console.log("In Add Product Route", req.body);
@@ -25,13 +21,14 @@ export const addProduct = async (req: Request, res: Response) => {
   }
 
   try {
-    const product = await create(
+    const product = await createProduct(
       productName,
       price,
       quantity,
       category,
       description
     );
+
     if (product)
       return res.status(201).json({ message: "Product added successfully." });
   } catch (error) {

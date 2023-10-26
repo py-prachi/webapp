@@ -187,6 +187,7 @@ describe("App routes", () => {
         coupon: "Coupon1",
         discount_type: DiscountType.FLAT,
         discount_rate: 10,
+        status:true,
         startDate: new Date("2023-10-09"),
         endDate: new Date("2023-10-19"),
       });
@@ -225,6 +226,7 @@ describe("App routes", () => {
       .set("authorization", `Bearer ${token}`)
       .send({
         coupon: "UpdateCoupon",
+        discount_type: DiscountType.FLAT,
         discount_rate: 10,
         status: true,
         startDate: new Date("2023-10-09"),

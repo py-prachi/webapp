@@ -92,61 +92,61 @@ describe("Add Products to cart", () => {
     expect(response.status).toBe(201);
   });
 
-//   it("should return 500 when product cannot be added", async () => {
-//     addToCartMock.mockRejectedValue(new Error("Error adding Product to Cart"));
+  it("should return 500 when product cannot be added", async () => {
+    addToCartMock.mockRejectedValue(new Error("Error adding Product to Cart"));
 
-//     getProductByIdMock.mockResolvedValue([
-//       { productId: 1, productName: "Product1", price: 10, quantity: 5 },
-//     ]);
-//     getUserByEmailMock.mockResolvedValue([
-//       { id: 4, email: "test4@test4.com", password: "password4", role: "user" },
-//     ]);
+    getProductByIdMock.mockResolvedValue([
+      { productId: 1, productName: "Product1", price: 10, quantity: 5 },
+    ]);
+    getUserByEmailMock.mockResolvedValue([
+      { id: 4, email: "test4@test4.com", password: "password4", role: "user" },
+    ]);
 
-//     const response = await request(app)
-//       .post("/api/webapp/products/addToCart")
-//       .set("authorization", `Bearer ${token}`)
-//       .send({
-//         productId: "invalidID",
-//         quantity: "invalidquantity",
-//       });
-//     expect(response.status).toBe(500);
-//   });
+    const response = await request(app)
+      .post("/api/webapp/products/addToCart")
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productId: "invalidID",
+        quantity: "invalidquantity",
+      });
+    expect(response.status).toBe(500);
+  });
 
-//   it("should return 404 when User not logged in", async () => {
-//     addToCartMock.mockResolvedValue([]);
+  it("should return 404 when User not logged in", async () => {
+    addToCartMock.mockResolvedValue([]);
 
-//     getProductByIdMock.mockResolvedValue([
-//       { productId: 1, productName: "Product1", price: 10, quantity: 5 },
-//     ]);
+    getProductByIdMock.mockResolvedValue([
+      { productId: 1, productName: "Product1", price: 10, quantity: 5 },
+    ]);
 
-//     getUserByEmailMock.mockResolvedValue(null);
+    getUserByEmailMock.mockResolvedValue(null);
 
-//     const response = await request(app)
-//       .post("/api/webapp/products/addToCart")
-//       .set("authorization", `Bearer ${token}`)
-//       .send({
-//         productId: "1",
-//         quantity: "2",
-//       });
+    const response = await request(app)
+      .post("/api/webapp/products/addToCart")
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productId: "1",
+        quantity: "2",
+      });
 
-//     expect(response.status).toBe(404);
-//   });
+    expect(response.status).toBe(404);
+  });
 
-//   it("should return 404 when product not found", async () => {
-//     addToCartMock.mockResolvedValue([]);
+  it("should return 404 when product not found", async () => {
+    addToCartMock.mockResolvedValue([]);
 
-//     getProductByIdMock.mockResolvedValue(null);
+    getProductByIdMock.mockResolvedValue(null);
 
-//     getUserByEmailMock.mockResolvedValue([]);
+    getUserByEmailMock.mockResolvedValue([]);
 
-//     const response = await request(app)
-//       .post("/api/webapp/products/addToCart")
-//       .set("authorization", `Bearer ${token}`)
-//       .send({
-//         productId: "101",
-//         quantity: "2",
-//       });
+    const response = await request(app)
+      .post("/api/webapp/products/addToCart")
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        productId: "101",
+        quantity: "2",
+      });
 
-//     expect(response.status).toBe(404);
-//   });
+    expect(response.status).toBe(404);
+  });
 });

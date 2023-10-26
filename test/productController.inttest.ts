@@ -2,7 +2,7 @@ import request from "supertest";
 import { response } from "express";
 import app from "../src/app";
 import {
-  create,
+  createProduct,
   del,
   getAll,
   getById,
@@ -30,7 +30,7 @@ describe("CRUD operations on Product", () => {
     const description = "";
 
     // when
-    const product = await create(
+    const product = await createProduct(
       productName,
       price,
       quantity,
@@ -54,8 +54,8 @@ describe("CRUD operations on Product", () => {
   });
 
   it("should fetch all products from the product table", async () => {
-    await create("Product2", 1000, 10);
-    await create("Product3", 1000, 10);
+    await createProduct("Product2", 1000, 10);
+    await createProduct("Product3", 1000, 10);
 
     // Act
     const products = await getAll();
@@ -76,7 +76,7 @@ describe("CRUD operations on Product", () => {
   it("should update specific product", async () => {
     const productId = 1;
     // Act
-    const products = await update(1, "updated_product", 100, 10);
+    const products = await update(1, "updated_product", 1000, 10);
     console.log(products);
     // Assert
     expect(products?.product_id).toBe(productId);
@@ -94,21 +94,21 @@ describe("CRUD operations on Product", () => {
   it("should fetch product/s for searched Product name", async () => {
     const productName = "mobile";
 
-    await create(
+    await createProduct(
       "Dell Laptop",
       50000,
       10,
       "Electronics",
       "high-performance, sleek, and lightweight portable "
     );
-    await create(
+    await createProduct(
       "Mac Laptop",
       100000,
       10,
       "Electronics",
       "high-performance, long-lasting battery "
     );
-    await create("Mobile", 10000, 10, "Electronics", "long-lasting battery ");
+    await createProduct("Mobile", 10000, 10, "Electronics", "long-lasting battery ");
 
     let products: Products[] | null = null;
 

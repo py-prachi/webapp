@@ -10,6 +10,7 @@ export const createCartEntry = async (
   quantity: number,
   discountApplied: number
 ) => {
+  console.log("in create cart entry service!");
   const cartRepository = AppDataSource.getRepository(Cart);
 
   const newCartEntry = new Cart();
@@ -17,7 +18,7 @@ export const createCartEntry = async (
   newCartEntry.product = product;
   newCartEntry.quantity = quantity;
   newCartEntry.subtotal = product.price * quantity;
-  newCartEntry.discountApplied = discountApplied * quantity; 
+  newCartEntry.discountApplied = discountApplied * quantity;
   newCartEntry.total = newCartEntry.subtotal - newCartEntry.discountApplied;
   newCartEntry.status = "Open";
 
@@ -30,17 +31,27 @@ export const createCartEntry = async (
   }
 };
 
-export const getProductDiscount = async (
-    productId: number
-  ) => {
-    try {
-      const ProductDiscountRepository = AppDataSource.getRepository(ProductDiscount);
-      const discounts = await ProductDiscountRepository.find({
-        where:{product:{product_id:productId}}
-      })
-        return discounts;
-    } catch (error) {
-      console.error("Error fetching discount:", error);
-      return null;
-    }
-  };
+export const getProductDiscount = async (productId: number) => {
+  try {
+    console.log("in get product-discount service", productId);
+    const productDiscountRepository =
+      AppDataSource.getRepository(ProductDiscount);
+    // const discounts = await ProductDiscountRepository.find({
+    //   where:{product:{product_id:productId}}
+    // })
+    // const productDiscounts = await productDiscountRepository
+    //   .createQueryBuilder("productDiscount")
+    //   .where("productDiscount.product = :productId", { productId })
+    //   .getMany();
+    const productDiscounts = await productDiscountRepository
+  .createQueryBuilder("productDiscount")
+  .leftJoinAndSelect("productDiscount.product", "product")
+  .leftJoinAndSelect("productDiscount.discount", "discount")
+  .where("product.product_id = :productId", { productId: productId })
+  .getMany();
+    return productDiscounts;
+  } catch (error) {
+    console.error("Error fetching discount:", error);
+    return null;
+  }
+};

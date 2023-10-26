@@ -8,7 +8,7 @@ import {
 import { AppDataSource } from "../src/data-source";
 import { Discount, DiscountType } from "../src/entity/discount";
 import { ProductDiscount } from "../src/entity/ProductDiscounts";
-import { getById } from "../src/service/productService";
+import { createProduct, getById } from "../src/service/productService";
 
 describe("CRUD operations on Discount", () => {
   beforeAll(async () => {
@@ -27,6 +27,7 @@ describe("CRUD operations on Discount", () => {
       "Coupon1",
       DiscountType.FLAT,
       100,
+      true,
       new Date("2023-10-09"),
       new Date("2023-10-19")
     );
@@ -49,6 +50,7 @@ describe("CRUD operations on Discount", () => {
       "Coupon2",
       DiscountType.FLAT,
       100,
+      true,
       new Date("2023-10-09"),
       new Date("2023-10-19")
     );
@@ -56,6 +58,7 @@ describe("CRUD operations on Discount", () => {
       "Coupon3",
       DiscountType.PERCENT,
       100,
+      true,
       new Date("2023-10-19"),
       new Date("2023-10-29")
     );
@@ -73,6 +76,7 @@ describe("CRUD operations on Discount", () => {
     const discount = await update(
       1,
       "updatedCoupon",
+      DiscountType.FLAT,
       100,
       true,
       new Date("2023-10-19"),
@@ -86,11 +90,20 @@ describe("CRUD operations on Discount", () => {
   });
 
   it("should apply discount to a product", async () => {
+    const productName = "product1";
+    const price = 100;
+    const quantity = 10;
+    const category = "category1";
+    const description = "";
+
+    // when
+    await createProduct("product for discount",100,10,"category1","description");
+     
     const productId = 1;
     const discountId = 1;
     const product = await getById(productId);
     const discount = await getDiscById(discountId);
-    console.log("product:", product);
+    console.log("in apply service ---- product:", product);
     console.log("discount: ", discount);
     // when
     if (product && discount) {
@@ -101,8 +114,11 @@ describe("CRUD operations on Discount", () => {
         new Date("2023-10-19")
       );
       console.log("ProductDiscount: ", productDiscount);
+      console.log("product within prodDisc:", productDiscount?.product.product_id);
       //then
       expect(productDiscount).toBeDefined();
+      expect(productDiscount?.product.product_id).toBe(productId);
+      expect(productDiscount?.discount.discount_id).toBe(discountId);
     }
   });
 });

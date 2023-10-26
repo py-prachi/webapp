@@ -23,9 +23,14 @@ export const addToCart = async (req: Request, res: Response) => {
     console.log("Product: ", product);
     console.log("User: ", user);
 
-    const discountRate = await checkProductDiscount(product);
-    
-    console.log("discount Rate:", discountRate);
+    let discountRate = await checkProductDiscount(product);
+    console.log("Returned back from checkProductDiscount!!!");
+    console.log("****discount Rate:****", discountRate);
+    if (discountRate === null){
+     discountRate = 0;
+    }
+
+    console.log("****discount Rate:****", discountRate);
 
     const newCartEntry = await createCartEntry(user, product, quantity, discountRate!);
 
@@ -48,25 +53,25 @@ export const addToCart = async (req: Request, res: Response) => {
 
 export const checkProductDiscount = async (product:Products) => {
     try {
-        console.log("In checkProductDiscount function:", product, product.product_id);
-        const productId = product.product_id;
-        
+        console.log("In checkProductDiscount function:", product);
+        const productId = product.product_id 
         console.log("productId:", productId);
-        const discounts = await getProductDiscount(productId);
-        console.log("Discounts returned from ProductDiscount", discounts);
+        const productDiscounts = await getProductDiscount(productId);
+        console.log("Discounts returned from ProductDiscount", productDiscounts);
 
         const currentDate = new Date();
         const currentDateString = currentDate.toISOString().slice(0, 10);
-        if (discounts) {
-            for (const discount of discounts) {
+        if (productDiscounts) {
+            for (const discount of productDiscounts) {
                 console.log("Dates:", discount.apply_date, discount.end_date, currentDateString);
                 const applyDate = new Date(discount.apply_date).toISOString().slice(0, 10);
                 const endDate = new Date(discount.end_date).toISOString().slice(0, 10);
 
                 if (currentDateString >= applyDate && currentDateString <= endDate) {
                     console.log("The date is in the valid range", currentDate);
-
-                    const discountRecord = await getDiscById(productId);
+                    console.log("discount id:", discount.discount.discount_id);
+                    const discountRecord = await getDiscById(discount.discount.discount_id);
+                    
                     console.log("Discount status:", discountRecord);
 
                     if (discountRecord && discountRecord.status) {
@@ -88,7 +93,7 @@ export const checkProductDiscount = async (product:Products) => {
             }
         }
 
-        console.log("No discount applied to Product:", productId);
+        console.log("No discount applied to Product,mismatch between Discount and Product Discount:", productId);
         return null;
     } catch (error) {
         console.error("Error in checkProductDiscount:", error);

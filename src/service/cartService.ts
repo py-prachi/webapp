@@ -36,13 +36,7 @@ export const getProductDiscount = async (productId: number) => {
     console.log("in get product-discount service", productId);
     const productDiscountRepository =
       AppDataSource.getRepository(ProductDiscount);
-    // const discounts = await ProductDiscountRepository.find({
-    //   where:{product:{product_id:productId}}
-    // })
-    // const productDiscounts = await productDiscountRepository
-    //   .createQueryBuilder("productDiscount")
-    //   .where("productDiscount.product = :productId", { productId })
-    //   .getMany();
+    
     const productDiscounts = await productDiscountRepository
   .createQueryBuilder("productDiscount")
   .leftJoinAndSelect("productDiscount.product", "product")
@@ -52,6 +46,24 @@ export const getProductDiscount = async (productId: number) => {
     return productDiscounts;
   } catch (error) {
     console.error("Error fetching discount:", error);
+    return null;
+  }
+};
+
+export const getCart = async (userId: number) => {
+  
+  try {
+    console.log("in get Cart service", userId);
+    const cartRepository = AppDataSource.getRepository(Cart);
+   
+    const cart = await cartRepository
+        .createQueryBuilder("cart")
+        .where("cart.user_id = :userId", { userId: userId })
+        .getMany();
+    return cart;
+   
+  } catch (error) {
+    console.error(`Error fetching product from cart for user: (${userId}):`, error);
     return null;
   }
 };

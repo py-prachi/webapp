@@ -2,13 +2,14 @@ import { DeleteResult, ILike, Like } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Products } from "../entity/Products";
 
-export const create = async (
+export const createProduct = async (
   productName: string,
   price: number,
   quantity: number,
   category?: string | undefined,
   description?: string | undefined
 ) => {
+  console.log("in create Product service!!");
   const productRepository = AppDataSource.getRepository(Products);
 
   const newProduct = new Products();

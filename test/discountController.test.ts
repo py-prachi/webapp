@@ -83,6 +83,7 @@ describe("Add Discounts", () => {
         coupon: "invalidcoupon",
         discount_type: DiscountType.FLAT,
         discount_rate: "invalidrate",
+        status: true,
         startDate: "invalidstartDate",
         endDate: "invalidendDate",
       });
@@ -94,6 +95,7 @@ describe("Add Discounts", () => {
       coupon: "validcoupon",
       discount_type: DiscountType.PERCENT,
       discount_rate: "validrate",
+      status: true,
       startDate: "validstartDate",
       endDate: "validendDate",
     });
@@ -105,6 +107,7 @@ describe("Add Discounts", () => {
         coupon: "validcoupon",
         discount_type: DiscountType.PERCENT,
         discount_rate: "validrate",
+        status: true,
         startDate: "validstartDate",
         endDate: "validendDate",
       });
@@ -119,6 +122,7 @@ describe("Get all Discounts", () => {
         coupon: "coupon1",
         discount_type: "flat",
         discount_rate: "validprice",
+        status: true,
         startDate: "validstartDate",
         endDate: "validendDate",
       },
@@ -126,6 +130,7 @@ describe("Get all Discounts", () => {
         coupon: "coupon2",
         discount_type: "percent",
         discount_rate: "validprice",
+        status: false,
         startDate: "validstartDate",
         endDate: "validendDate",
       },
@@ -137,7 +142,7 @@ describe("Get all Discounts", () => {
     expect(response.status).toBe(200);
   });
 
-  it("should return 404 when NO products are found in catalog", async () => {
+  it("should return 404 when NO discounts are found in catalog", async () => {
     getDiscountMock.mockResolvedValueOnce([]);
     const response = await request(app)
       .get("/api/admin/discount")
@@ -146,8 +151,8 @@ describe("Get all Discounts", () => {
     expect(response.status).toBe(404);
   });
 
-  it("should return 500 when product cannot be fetched ", async () => {
-    getDiscountMock.mockRejectedValue(new Error("Error fetching Product"));
+  it("should return 500 when discount cannot be fetched ", async () => {
+    getDiscountMock.mockRejectedValue(new Error("Error fetching Discount"));
 
     const response = await request(app)
       .get("/api/admin/discount")
@@ -157,12 +162,13 @@ describe("Get all Discounts", () => {
   });
 });
 
-describe("Update Product", () => {
+describe("Update Discount", () => {
   it("should return 204 when discount updated successfully", async () => {
     updateDiscountMock.mockResolvedValue({
       coupon: "coupon1",
       discount_type: "flat",
       discount_rate: "validprice",
+      status: true,
       startDate: "validstartDate",
       endDate: "validendDate",
     });
@@ -175,6 +181,7 @@ describe("Update Product", () => {
         coupon: "validcoupon",
         discount_type: "flat",
         discount_rate: "validrate",
+        status: true,
         startDate: "validstartDate",
         endDate: "validendDate",
       });
@@ -191,6 +198,7 @@ describe("Update Product", () => {
         coupon: "validcoupon",
         discount_type: "flat",
         discount_rate: "validrate",
+        status: true,
         startDate: "validstartDate",
         endDate: "validendDate",
       });
@@ -217,6 +225,7 @@ describe("Update Product", () => {
         coupon: "validcoupon",
         discount_type: "flat",
         discount_rate: "validrate",
+        status: true,
         startDate: "validstartDate",
         endDate: "validendDate",
       });
@@ -232,8 +241,9 @@ describe("Update Product", () => {
       .set("authorization", `Bearer ${token}`)
       .send({
         coupon: "invalidcoupon",
-        discount_type: "valid",
+        discount_type: DiscountType.FLAT,
         discount_rate: "invalidrate",
+        status: true,
         startDate: "invalidstartDate",
         endDate: "invalidendDate",
       });

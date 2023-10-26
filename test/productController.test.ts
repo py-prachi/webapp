@@ -1,7 +1,7 @@
 import request from "supertest";
 import { response } from "express";
 import {
-  create,
+  createProduct,
   getById,
   getAll,
   del,
@@ -12,7 +12,7 @@ import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 
 jest.mock("../src/service/productService");
-const addProductMock = create as jest.Mock;
+const addProductMock = createProduct as jest.Mock;
 
 jest.mock("../src/service/productService");
 const getProductMock = getAll as jest.Mock;

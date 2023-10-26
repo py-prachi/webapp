@@ -15,22 +15,16 @@ const jwt = require("jsonwebtoken");
 export const addDiscount = async (req: Request, res: Response) => {
   console.log("In Add Discount Route", req.body);
 
-  const { coupon, discount_type, discount_rate, startDate, endDate } = req.body;
+  const { coupon, discount_type, discount_rate, status, startDate, endDate } = req.body;
 
   if (!coupon || !discount_rate) {
-    console.debug("Returning from 1st If");
     return res.status(400).json({
       message: "Coupon name, discount Rate missing",
     });
   }
-  console.debug(
-    "discount type**: ",
-    discount_type,
-    typeof discount_type,
-    Object.values(DiscountType)
-  );
-  if (!Object.values(DiscountType).includes(discount_type)) {
-    console.debug("Returning from 2nd If");
+  const lower_discount_type = discount_type.toLowerCase();
+  
+  if (!Object.values(DiscountType).includes(lower_discount_type)) {
     return res.status(400).json({
       message: "Incorrect discount Type, should be flat or percent ",
     });
@@ -38,8 +32,9 @@ export const addDiscount = async (req: Request, res: Response) => {
   try {
     const discount = await create(
       coupon,
-      discount_type,
+      lower_discount_type,
       discount_rate,
+      status,
       startDate,
       endDate
     );
@@ -74,7 +69,7 @@ export const getDiscount = async (req: Request, res: Response) => {
 
 export const updateDiscount = async (req: Request, res: Response) => {
   console.log("In Update Discount Route", req.body);
-  const { coupon, discount_rate, status, startDate, endDate } = req.body;
+  const { coupon, discount_type ,discount_rate, status, startDate, endDate } = req.body;
 
   if (!coupon || !discount_rate) {
     return res.status(400).json({
@@ -87,11 +82,19 @@ export const updateDiscount = async (req: Request, res: Response) => {
   if (isNaN(discountId)) {
     return res.status(400).json({ message: "Invalid discount ID" });
   }
+  const lower_discount_type = discount_type.toLowerCase();
+  
+  if (!Object.values(DiscountType).includes(lower_discount_type)) {
+    return res.status(400).json({
+      message: "Incorrect discount Type, should be flat or percent ",
+    });
+  }
 
   try {
     const discount = await update(
       discountId,
       coupon,
+      lower_discount_type,
       discount_rate,
       status,
       startDate,

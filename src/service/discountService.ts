@@ -1,7 +1,5 @@
-import { DeleteResult } from "typeorm";
-import { AppDataSource } from "../data-source";
+import { AppDataSource } from "../data-source"
 import { Discount, DiscountType } from "../entity/discount";
-import { EnumType } from "typescript";
 import { ProductDiscount } from "../entity/ProductDiscounts";
 import { Products } from "../entity/Products";
 
@@ -9,6 +7,7 @@ export const create = async (
   coupon: string,
   discount_type: DiscountType,
   discount_rate: number,
+  status: boolean,
   startDate: Date,
   endDate: Date
 ) => {
@@ -18,6 +17,7 @@ export const create = async (
   newDiscount.coupon = coupon;
   newDiscount.discount_type = discount_type;
   newDiscount.discount_rate = discount_rate;
+  newDiscount.status = status;
   newDiscount.startDate = startDate;
   newDiscount.endDate = endDate;
 
@@ -58,6 +58,7 @@ export const getDiscById = async (discountId: number) => {
 export const update = async (
   discountId: number,
   coupon: string,
+  discount_type: DiscountType,
   discount_rate: number,
   status: boolean,
   startDate: Date,
@@ -73,6 +74,7 @@ export const update = async (
     if (!discount_to_update) return null;
 
     discount_to_update.coupon = coupon;
+    discount_to_update.discount_type = discount_type;
     discount_to_update.discount_rate = discount_rate;
     discount_to_update.status = status;
     discount_to_update.startDate = startDate;
@@ -92,6 +94,7 @@ export const apply = async (
   applyDate: Date,
   endDate: Date
 ) => {
+  console.log("In apply product Discount service!! ")
   const productDiscountRepository =
     AppDataSource.getRepository(ProductDiscount);
 
@@ -110,3 +113,20 @@ export const apply = async (
     return null;
   }
 };
+
+
+export const getProductDiscount = async (productId:number) => {
+  try {
+    console.log("In Product Discount service to find discount for product:",productId);
+    const productDiscountRepository = AppDataSource.getRepository(ProductDiscount);
+    const discount = await productDiscountRepository.find({
+      where: { product: { product_id: productId } },
+    });
+    return discount;
+  } catch (error) {
+    console.error(`Error fetching product by id (${productId}):`, error);
+    return null;
+  }
+};
+
+

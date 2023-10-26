@@ -7,7 +7,8 @@ import { getUserByEmail } from "../src/service/userService";
 import { getById } from "../src/service/productService";
 import { User } from "../src/entity/User";
 import { Products } from "../src/entity/Products";
-import { createCartEntry } from "../src/service/cartService";
+import { createCartEntry, getProductDiscount } from "../src/service/cartService";
+import { getDiscById } from "../src/service/discountService";
 
 jest.mock("../src/service/productService");
 const getProductByIdMock = getById as jest.Mock;
@@ -17,6 +18,12 @@ const getUserByEmailMock = getUserByEmail as jest.Mock;
 
 jest.mock("../src/service/cartService");
 const addToCartMock = createCartEntry as jest.Mock;
+
+jest.mock("../src/service/cartService");
+const getProductDiscountMock = getProductDiscount as jest.Mock;
+
+jest.mock("../src/service/discountService");
+const getDiscByIdMock = getDiscById as jest.Mock;
 
 jest.mock("../src/data-source");
 const mockDataSource = jest.spyOn(AppDataSource, "initialize");
@@ -44,15 +51,35 @@ describe("Add Products to cart", () => {
       user: User,
       product: Products,
       quantity: 2,
+      discountRate: 1
     });
 
     getProductByIdMock.mockResolvedValue([
-      { productId: 1, productName: "Product1", price: 10, quantity: 5 },
+      { product_id: 1, productName: "Product1", price: 10, quantity: 5 },
     ]);
 
     getUserByEmailMock.mockResolvedValue([
       { id: 4, email: "test4@test4.com", password: "password4", role: "user" },
     ]);
+
+    getDiscByIdMock.mockResolvedValue([
+        {
+          discountId: 1,
+          coupon: "Coupon1",
+          status: "true",
+          discountType: "flat",
+          discountRate: 50,
+        }
+      ]);
+
+      getProductDiscountMock.mockResolvedValue([
+        {
+            product_id: 1,
+            discount_id: 1,
+            apply_date : '2023-10-19',
+            end_date : '2023-10-29'
+        }
+      ])
 
     const response = await request(app)
       .post("/api/webapp/products/addToCart")

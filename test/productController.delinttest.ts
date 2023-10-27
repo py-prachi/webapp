@@ -4,7 +4,7 @@ import app from "../src/app";
 import {
   createProduct,
   del,
-  getAll,
+  getAllProducts,
   getById,
   search,
   update,
@@ -58,7 +58,7 @@ describe("CRUD operations on Product", () => {
     await createProduct("Product3", 1000, 10);
 
     // Act
-    const products = await getAll();
+    const products = await getAllProducts();
     console.log(products);
     // Assert
     expect(products?.length).toBeGreaterThan(0);

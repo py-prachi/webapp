@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   UpdateDateColumn,
+  OneToMany,
  
 } from "typeorm";
+import { ProductOrders } from "./ProductOrders";
 
 enum order_status {
     PENDING = "pending",
@@ -61,6 +63,10 @@ class Orders {
 
   @UpdateDateColumn()
   updatedDate!: Date;
+
+  @OneToMany(() => ProductOrders, (productOrder) => productOrder.order)
+  productOrders!: ProductOrders[];
+  
 }
 
 export { Orders,order_status };

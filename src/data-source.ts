@@ -9,6 +9,7 @@ import { ProductDiscount } from "./entity/ProductDiscounts";
 import { Discount } from "./entity/discount";
 import { Cart } from "./entity/Cart";
 import { Orders } from "./entity/Orders";
+import { ProductOrders } from "./entity/ProductOrders";
 require("dotenv").config();
 
 const dbConfig: PostgresConnectionOptions = {
@@ -21,7 +22,7 @@ const dbConfig: PostgresConnectionOptions = {
   database: process.env.DB_DATABASE,
   synchronize: process.env.DB_SYNCHRONIZE === "true",
   logging: process.env.DB_LOGGING === "true",
-  entities: [User, Products, Discount, ProductDiscount, Cart, Orders],
+  entities: [User, Products, Discount, ProductDiscount, Cart, Orders, ProductOrders],
   subscribers: [],
 };
 

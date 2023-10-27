@@ -4,7 +4,7 @@ import {
   createProduct,
   del,
   getById,
-  getAll,
+  getAllProducts,
   update,
   search,
 } from "../service/productService";
@@ -42,7 +42,7 @@ export const getProducts = async (req: Request, res: Response) => {
   console.log("In Get Product Route", req.body);
 
   try {
-    const product = await getAll();
+    const product = await getAllProducts();
     console.log("product:", product);
 
     if (!product || product.length === 0) {

@@ -28,8 +28,9 @@ export const createProduct = async (
   }
 };
 
-export const getAll = async () => {
+export const getAllProducts = async () => {
   try {
+    console.log("in Get all products service!!")
     const productRepository = AppDataSource.getRepository(Products);
     const product = await productRepository.find();
     return product;

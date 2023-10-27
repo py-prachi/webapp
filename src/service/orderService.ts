@@ -30,3 +30,29 @@ export const createOrder = async (
     return null;
   }
 };
+
+export const updateOrder = async (
+    orderId: number,
+    totalPrice: number,
+    
+    ) => {
+    try {
+      console.log("data received in update Order service: ", orderId);
+      const orderRepository = AppDataSource.getRepository(Orders);
+      const order_to_update = await orderRepository.findOne({
+        where: { order_id: orderId },
+      });
+  
+      if (!order_to_update) return null;
+  
+      order_to_update.total_amount = totalPrice;
+      order_to_update.order_status = order_status.COMPLETED;
+     
+  
+      await orderRepository.save(order_to_update);
+      return order_to_update;
+    } catch (error) {
+      console.error(`Error updating Order:`, error);
+      return null;
+    }
+  };

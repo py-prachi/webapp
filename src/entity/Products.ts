@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 
 import { Entity } from "typeorm";
 import { Cart } from "./Cart";
+import { ProductDiscount } from "./ProductDiscounts";
 
 enum ProductStatus {
   AVAILABLE = "available",
@@ -68,8 +70,12 @@ class Products extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at!: Date;
-  productDiscount: any;
-  cart: any;
+  
+  @OneToMany(() => ProductDiscount, (productDiscount) => productDiscount.product)
+  productDiscount!: ProductDiscount[];
+  
+  @OneToMany(() => Cart, (cart) => cart.user)
+  cart!: Cart[];
 }
 
 export { Products };

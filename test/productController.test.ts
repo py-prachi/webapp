@@ -3,7 +3,7 @@ import { response } from "express";
 import {
   createProduct,
   getById,
-  getAll,
+  getAllProducts,
   del,
   update,
   search,
@@ -15,7 +15,7 @@ jest.mock("../src/service/productService");
 const addProductMock = createProduct as jest.Mock;
 
 jest.mock("../src/service/productService");
-const getProductMock = getAll as jest.Mock;
+const getProductMock = getAllProducts as jest.Mock;
 
 jest.mock("../src/service/productService");
 const getProductByIdMock = getById as jest.Mock;

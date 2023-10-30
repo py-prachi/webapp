@@ -1,11 +1,10 @@
 import request from "supertest";
-import { response } from "express";
+
 import app from "../src/app";
 import { AppDataSource } from "../src/data-source";
 import { User } from "../src/entity/User";
-import { Discount, DiscountType } from "../src/entity/discount";
-//import { userLogin } from "../src/controller/userController";
-//import { addProduct } from "../src/controller/productController";
+import { DiscountType } from "../src/entity/discount";
+
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config;
@@ -187,7 +186,7 @@ describe("App routes", () => {
         coupon: "Coupon1",
         discount_type: DiscountType.FLAT,
         discount_rate: 10,
-        status:true,
+        status: true,
         startDate: new Date("2023-10-09"),
         endDate: new Date("2023-10-19"),
       });
@@ -330,5 +329,43 @@ describe("App routes", () => {
       });
 
     expect(response.status).toBe(201);
+  });
+
+  it("Logged in as customer, can checkout from cart sucessfully", async () => {
+    const token = jwt.sign(
+      {
+        userName: "test3",
+        role: "user",
+      },
+      process.env.SECRET_KEY
+    );
+
+    const response = await request(app)
+      .post(`/api/webapp/checkout`)
+      .set("authorization", `Bearer ${token}`)
+      .send({
+        shippingAddress: "ABC",
+        contactNumber: 1245676511,
+        cardNumber: 1526352436351711,
+      });
+
+    expect(response.status).toBe(201);
+  });
+
+  it("Logged in as customer, can view order history", async () => {
+    const token = jwt.sign(
+      {
+        userName: "test3",
+        role: "user",
+      },
+      process.env.SECRET_KEY
+    );
+
+    const response = await request(app)
+      .get(`/api/webapp/orderHistory`)
+      .set("authorization", `Bearer ${token}`);
+     
+
+    expect(response.status).toBe(200);
   });
 });

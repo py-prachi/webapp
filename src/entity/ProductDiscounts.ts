@@ -22,7 +22,7 @@ class ProductDiscount {
   @JoinColumn({ name: "product_id" })
   product!: Products;
 
-  @ManyToOne(() => Discount, (discount) => discount.productDiscounts, {
+  @ManyToOne(() => Discount, (discount) => discount.productDiscount, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })

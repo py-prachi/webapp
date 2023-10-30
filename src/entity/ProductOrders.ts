@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 import { Orders } from "./Orders";
 
 @Entity("product_orders")
@@ -9,15 +15,14 @@ class ProductOrders {
   @ManyToOne(() => Orders, (order) => order.productOrders)
   @JoinColumn({ name: "order_id" })
   order!: Orders;
-  
+
   @Column({
     type: "int",
   })
   product_id!: number;
 
   @Column({
-    type: "varchar",
-    unique: true,
+    type: "varchar"
   })
   product_name!: string;
 

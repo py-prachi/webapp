@@ -4,7 +4,7 @@ import { registerUser, userLogin } from "../../controller/userController";
 import { searchProduct } from "../../controller/productController";
 import { addToCart } from "../../controller/cartController";
 import { authUser } from "../../middleware/authorizer";
-import { checkoutCart } from "../../controller/orderController";
+import { checkoutCart, orderHistory } from "../../controller/orderController";
 
 const userRouter = express.Router();
 
@@ -17,5 +17,7 @@ userRouter.get("/product/search", searchProduct);
 userRouter.post("/products/addToCart", authUser, addToCart);
 
 userRouter.post("/checkout", authUser, checkoutCart);
+
+userRouter.get("/orderHistory", authUser, orderHistory);
 
 export default userRouter;

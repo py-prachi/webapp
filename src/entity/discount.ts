@@ -1,6 +1,7 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { BaseEntity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 
 import { Entity } from "typeorm";
+import { ProductDiscount } from "./ProductDiscounts";
 
 enum DiscountType {
   FLAT = "flat",
@@ -54,7 +55,9 @@ class Discount extends BaseEntity {
     type: "timestamp",
   })
   endDate: Date | undefined;
-  productDiscounts: any;
+  
+  @OneToMany(() => ProductDiscount, (productDiscount) => productDiscount.discount)
+  productDiscount!: ProductDiscount[];
 }
 
 export { Discount, DiscountType };

@@ -1,5 +1,7 @@
 import { AppDataSource } from "../data-source";
+import { Cart } from "../entity/Cart";
 import { Orders, order_status } from "../entity/Orders";
+import { ProductOrders } from "../entity/ProductOrders";
 
 export const createOrder = async (
   userId: number,
@@ -56,3 +58,54 @@ export const updateOrder = async (
       return null;
     }
   };
+
+  export const createProductOrder = async (
+    order: Orders,
+    record: Cart,
+    
+  ) => {
+    console.log("in create ProductOrder service!");
+    const productOrderRepository = AppDataSource.getRepository(ProductOrders);
+  
+    const newEntry = new ProductOrders();
+    newEntry.order = order;
+    newEntry.product_id = record.product.product_id;
+    newEntry.product_name = record.product.product_name;
+    newEntry.description = record.product.description;
+    newEntry.category = record.product.category;
+    newEntry.quantity = record.quantity;
+    newEntry.discountApplied = record.discountApplied;
+    newEntry.subtotal = record.subtotal;
+    newEntry.total = record.total;
+    newEntry.orderDate = order.orderDate;
+    newEntry.status = "Ordered";
+  
+    try {
+      const productOrderEntry = await productOrderRepository.save(newEntry);
+      return productOrderEntry;
+    } catch (error) {
+      console.error("Error adding product to productOrderCart:", error);
+      return null;
+    }
+  };
+
+  export const getOrders = async (userId: number) => {
+    try {
+      console.log("in get Order service", userId);
+      const orderRepository = AppDataSource.getRepository(Orders);
+  
+      const userOrders = await orderRepository
+        .createQueryBuilder("order")
+        .where("order.user_id = :userId", { userId: userId })
+        .leftJoinAndSelect("order.productOrders", "productOrder")
+        .getMany();
+      return userOrders;
+    } catch (error) {
+      console.error(
+        `Error fetching orders for user: (${userId}):`,
+        error
+      );
+      return null;
+    }
+  };
+  

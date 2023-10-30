@@ -1,7 +1,7 @@
 import { AppDataSource } from "../src/data-source";
 
 import { checkProductDiscount } from "../src/controller/cartController";
-import { createProduct, getAll, getById } from "../src/service/productService";
+import {  getById } from "../src/service/productService";
 import { getUserByEmail } from "../src/service/userService";
 import { createCartEntry } from "../src/service/cartService";
 import { User } from "../src/entity/User";

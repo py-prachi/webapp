@@ -17,6 +17,9 @@ enum order_status {
 class Orders {
   @PrimaryGeneratedColumn()
   order_id!: number;
+  
+  @OneToMany(() => ProductOrders, (productOrder) => productOrder.order)
+  productOrders!: ProductOrders[];
 
   @Column({
     type: "int",
@@ -64,8 +67,7 @@ class Orders {
   @UpdateDateColumn()
   updatedDate!: Date;
 
-  @OneToMany(() => ProductOrders, (productOrder) => productOrder.order)
-  productOrders!: ProductOrders[];
+  
   
 }
 

@@ -13,33 +13,46 @@ import {
   getProducts,
   updateProduct,
 } from "../../controller/productController";
-//import { authAdmin } from "../../middleware/authorizer";
-//const roles = require('./roles');
+
 import { checkPermissions } from "../../middleware/authorizer";
 
 const adminRouter = express.Router();
 
-//adminRouter.post("/product", authAdmin, addProduct);
-adminRouter.post("/product", checkPermissions('addProduct'), addProduct);
+adminRouter.post("/product", checkPermissions("addProduct"), addProduct);
 
+adminRouter.get("/product", checkPermissions("getProducts"), getProducts);
 
-adminRouter.get("/product", checkPermissions('getProducts'), getProducts);
+adminRouter.get(
+  "/product/:id",
+  checkPermissions("getProductById"),
+  getProductById
+);
 
-adminRouter.get("/product/:id", checkPermissions('getProductById'), getProductById);
+adminRouter.put(
+  "/product/:id",
+  checkPermissions("updateProduct"),
+  updateProduct
+);
 
-adminRouter.put("/product/:id", checkPermissions('updateProduct'), updateProduct);
+adminRouter.delete(
+  "/product/:id",
+  checkPermissions("deleteProduct"),
+  deleteProduct
+);
 
-adminRouter.delete("/product/:id", checkPermissions('deleteProduct'), deleteProduct);
+adminRouter.post("/discount", checkPermissions("addDiscount"), addDiscount);
 
-adminRouter.post("/discount", checkPermissions('addDiscount'), addDiscount);
+adminRouter.get("/discount", checkPermissions("getDiscount"), getDiscount);
 
-adminRouter.get("/discount", checkPermissions('getDiscount'), getDiscount);
-
-adminRouter.put("/discount/:id", checkPermissions('updateDiscount'), updateDiscount);
+adminRouter.put(
+  "/discount/:id",
+  checkPermissions("updateDiscount"),
+  updateDiscount
+);
 
 adminRouter.post(
   "/product/:productId/discount/:discountId",
-  checkPermissions('addProductDiscount'),
+  checkPermissions("addProductDiscount"),
   addProductDiscount
 );
 

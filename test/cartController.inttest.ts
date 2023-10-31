@@ -23,56 +23,7 @@ describe("Cart operations", () => {
     await AppDataSource.destroy();
   });
 
-  it("user should be able to add a product to the cart (no discounts applied to product)", async () => {
-    //given
-
-    const email = "test4@test4.com";
-    const password = "password4";
-    const role = "user";
-    const existingUser = new User();
-    existingUser.email = email;
-    existingUser.password = password;
-    existingUser.role = role;
-    await existingUser.save();
-    const newProduct = await createProduct("product w/o discount",1000,10,"category1","description");
-    const productId = newProduct?.product_id;
-    const userName = "test4@test4.com";
-    const product = await getById(productId!);
-    const user = await getUserByEmail(userName);
-    console.log("product:", product);
-    console.log("user: ", user);
-
-    let discountRate = await checkProductDiscount(product!);
-
-    console.log("Returned back from checkProductDiscount!!!");
-    console.log("****discount Rate:****", discountRate);
-    if (discountRate === null) {
-      discountRate = 0;
-    }
-    console.log("****discount Rate:****", discountRate);
-    // when
-    const quantityFromJson = 1;
-    if (product && user) {
-      const newCartEntry = await createCartEntry(
-        user,
-        product,
-        quantityFromJson,
-        discountRate!
-      );
-
-      console.log("cartEntry: ", newCartEntry);
-      //then
-
-      expect(newCartEntry).toBeDefined();
-      expect(newCartEntry?.discountApplied).toBeDefined();
-      expect(newCartEntry?.product.product_id).toBe(productId);
-      expect(newCartEntry?.discountApplied).toBe("0.00");
-      expect(newCartEntry?.quantity).toBe(quantityFromJson);
-      expect(newCartEntry?.subtotal).toBe("1000.00");
-      expect(newCartEntry?.total).toBe("1000.00");
-    }
-  });
-
+  
   it("user should be able to add a product to the cart (FLAT Discount applied to product)", async () => {
     //given
 
@@ -278,4 +229,54 @@ describe("Cart operations", () => {
       expect(newCartEntry?.total).toBe(String(totalPrice));
     }
   });
+  it("user should be able to add a product to the cart (no discounts applied to product)", async () => {
+    //given
+
+    const email = "test4@test4.com";
+    const password = "password4";
+    const role = "user";
+    const existingUser = new User();
+    existingUser.email = email;
+    existingUser.password = password;
+    existingUser.role = role;
+    await existingUser.save();
+    const newProduct = await createProduct("product w/o discount",1000,10,"category1","description");
+    const productId = newProduct?.product_id;
+    const userName = "test4@test4.com";
+    const product = await getById(productId!);
+    const user = await getUserByEmail(userName);
+    console.log("product:", product);
+    console.log("user: ", user);
+
+    let discountRate = await checkProductDiscount(product!);
+
+    console.log("Returned back from checkProductDiscount!!!");
+    console.log("****discount Rate:****", discountRate);
+    if (discountRate === null) {
+      discountRate = 0;
+    }
+    console.log("****discount Rate:****", discountRate);
+    // when
+    const quantityFromJson = 1;
+    if (product && user) {
+      const newCartEntry = await createCartEntry(
+        user,
+        product,
+        quantityFromJson,
+        discountRate!
+      );
+
+      console.log("cartEntry: ", newCartEntry);
+      //then
+
+      expect(newCartEntry).toBeDefined();
+      expect(newCartEntry?.discountApplied).toBeDefined();
+      expect(newCartEntry?.product.product_id).toBe(productId);
+      expect(newCartEntry?.discountApplied).toBe("0.00");
+      expect(newCartEntry?.quantity).toBe(quantityFromJson);
+      expect(newCartEntry?.subtotal).toBe("1000.00");
+      expect(newCartEntry?.total).toBe("1000.00");
+    }
+  });
+
 });

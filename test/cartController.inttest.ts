@@ -1,7 +1,7 @@
 import { AppDataSource } from "../src/data-source";
 
 import { checkProductDiscount } from "../src/controller/cartController";
-import {  getById } from "../src/service/productService";
+import {  createProduct, getById } from "../src/service/productService";
 import { getUserByEmail } from "../src/service/userService";
 import { createCartEntry } from "../src/service/cartService";
 import { User } from "../src/entity/User";
@@ -34,10 +34,10 @@ describe("Cart operations", () => {
     existingUser.password = password;
     existingUser.role = role;
     await existingUser.save();
-
-    const productId = 1;
+    const newProduct = await createProduct("product w/o discount",1000,10,"category1","description");
+    const productId = newProduct?.product_id;
     const userName = "test4@test4.com";
-    const product = await getById(productId);
+    const product = await getById(productId!);
     const user = await getUserByEmail(userName);
     console.log("product:", product);
     console.log("user: ", user);

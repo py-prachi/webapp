@@ -17,7 +17,7 @@ export const checkoutCart = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  console.log("User: ", user, user.id);
+  
   const userId = user.id;
   try {
     const newOrderEntry = await createOrder(
@@ -26,8 +26,6 @@ export const checkoutCart = async (req: Request, res: Response) => {
       contactNumber,
       cardNumber
     );
-    console.log("Returned back from create Order!!!");
-    console.log("Order Created :", newOrderEntry);
     const orderId = newOrderEntry?.order_id;
 
     if (!newOrderEntry) {
@@ -36,24 +34,22 @@ export const checkoutCart = async (req: Request, res: Response) => {
       });
     }
     const cartRecords = await getCart(userId);
-    console.log("Returned from Cart entity:", cartRecords);
+    
     let totalPrice = 0;
      //
      let entires_in_productOrders = 0;
      //
     if (cartRecords) {
       for (const record of cartRecords) {
-        console.log("price: ", record.total, typeof record.total);
+        
 
         const total = String(record.total);
         totalPrice += parseFloat(total);
         await createProductOrder(newOrderEntry!,record);
         entires_in_productOrders +=1;
       }
-      console.log("total entiries in Cart :", entires_in_productOrders)
-      console.log("Total Price:", totalPrice, typeof totalPrice);
       const order = await updateOrder(orderId!, totalPrice);
-        console.log("status of order: ", order);
+        
         if (!order) {
           console.log("status of order: ", order);
         }
@@ -80,12 +76,10 @@ export const orderHistory = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "User not found" });
   }
 
-  console.log("User: ", user, user.id);
+  
   const userId = user.id;
   try {
     const orderHistory = await getOrders(userId);
-    console.log("Returned back from get Order History!!!");
-    console.log("Order History :", orderHistory);
     return res.status(200).json({ Orders: orderHistory });
   } catch (error) {
     return res.status(500).json({

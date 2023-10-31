@@ -78,7 +78,7 @@ export const updateDiscount = async (req: Request, res: Response) => {
   }
   const { id } = req.params;
   const discountId = parseInt(id, 10);
-  console.log("finding discount for id :", discountId);
+  
   if (isNaN(discountId)) {
     return res.status(400).json({ message: "Invalid discount ID" });
   }
@@ -102,11 +102,9 @@ export const updateDiscount = async (req: Request, res: Response) => {
     );
 
     if (!discount) {
-      console.log("inside dicount not found: ", discount);
+     
       return res.status(404).json({ message: "Discount not found" });
     }
-
-    console.log("control reached here: ", discount);
     return res.status(200).json({ message: "Discount id Updated" });
   } catch (error) {
     console.error("Error fetching discount by ID:", error);
@@ -126,7 +124,7 @@ export const addProductDiscount = async (req: Request, res: Response) => {
     console.log("Discount: ", discount);
 
     if (!product || !discount) {
-      console.log("inside if loop - prod not found");
+     
       return res.status(404).json({ message: "Product or discount not found" });
     }
 

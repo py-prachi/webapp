@@ -19,20 +19,13 @@ function verifyToken(req: Request, res: Response) {
 export const checkPermissions = (permission: any) => {
   return (req: Request, res: Response, next: () => void) => {
     console.log("in check permission for :", permission);
-
     const decodedToken = verifyToken(req, res);
-    console.log("Decoded token received:", decodedToken);
+
     if (decodedToken === null) {
-      console.log("null decoded token..");
       return res.status(401).json({ message: "Unauthorized" });
     } else {
-      console.log("correct decoded token..");
       if (roles[decodedToken.role as Role].includes(permission)) {
-        console.log("permission for:", roles[decodedToken.role as Role]);
-
         if (decodedToken.role === "user") {
-          console.log("Its a User logged in..");
-
           if (decodedToken.sub) {
             res.locals.userName = decodedToken.sub;
           }
@@ -44,5 +37,3 @@ export const checkPermissions = (permission: any) => {
     }
   };
 };
-
-

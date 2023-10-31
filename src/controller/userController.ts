@@ -9,7 +9,7 @@ export const userLogin = async (req: Request, res: Response) => {
   const { userName, password } = req.body;
   console.log(userName, password);
 
-  // Validate input data (e.g., username and password constraints)
+  
   if (!userName || !password) {
     return res
       .status(400)

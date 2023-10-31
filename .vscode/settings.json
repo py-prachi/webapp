@@ -1,5 +1,5 @@
 {
     "git.ignoreLimitWarning": true,
     "typescript.tsdk": "node_modules/typescript/lib",
-    "window.title": "${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}[Branch: checkoutBranch]"
+    "window.title": "${activeEditorShort}${separator}${rootName}${separator}${profileName}${separator}[Branch: newRoles]"
 }

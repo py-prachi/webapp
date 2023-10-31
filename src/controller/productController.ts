@@ -61,7 +61,7 @@ export const getProductById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const productId = parseInt(id, 10);
-    console.log("finding product for id :", productId);
+    
     if (isNaN(productId)) {
       return res.status(400).json({ message: "Invalid product ID" });
     }
@@ -89,18 +89,14 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
   try {
     const delProd = await del(productId);
-    console.log("status of delProd: ", delProd);
+   
     if (delProd) {
-      console.log("product deleted!!");
+      
       return res.status(204).json({ message: "Product deleted" });
     } else if (delProd == null) {
       return res.status(404).json({ message: "Product not found" });
     }
-    // if(!delProd){
-    //   return res.status(404).json({ message: "Product not found" });
-    // }
-    // return res.status(204).json({ message: "Product deleted" });
-  } catch (error) {
+      } catch (error) {
     console.error("Error fetching product by ID:", error);
     return res.status(500).json({ message: "Server error" });
   }
@@ -117,16 +113,16 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
   const { id } = req.params;
   const productId = parseInt(id, 10);
-  console.log("finding product for id :", productId);
+  
   if (isNaN(productId)) {
     return res.status(400).json({ message: "Invalid product ID" });
   }
 
   try {
     const product = await update(productId, productName, price, quantity);
-    console.log("status of product: ", product);
+    
     if (!product) {
-      console.log("status of product: ", product);
+     
       return res.status(404).json({ message: "Product not found" });
     }
 
@@ -145,14 +141,12 @@ export const searchProduct = async (req: Request, res: Response) => {
     const category = req.query.category as string | undefined;
     const description = req.query.description as string | undefined;
 
-    console.log("finding product :", productName, category, description);
-
     const product = await search(productName, category, description);
 
     if (product === null || (Array.isArray(product) && product.length === 0)) {
       return res.status(404).json({ message: "Product not found" });
     }
-    console.log("returned product:", product);
+    
     return res.status(200).json({ products: product });
   } catch (error) {
     console.error("Error fetching product by ID:", error);

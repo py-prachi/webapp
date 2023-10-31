@@ -198,10 +198,13 @@ describe("Checkout Cart operations", () => {
   });
 
   it("logged customer should be able to see order History", async () => {
-    const userId = 2;
+    
+    const userName = "test5@test.com";
 
-    const userOrders = await getOrders(userId);
-    console.log(userOrders);
+    const user = await getUserByEmail(userName);
+    const userId = user?.id;
+    const userOrders = await getOrders(userId!);
+    console.log(userOrders, updateOrder?.length);
     // Assert
     expect(updateOrder?.length).toBeGreaterThan(0);
     expect(userOrders![0].user_id).toBe(userId);
